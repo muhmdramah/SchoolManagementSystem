@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using SchoolManagementSystem.Infrastructure;
 using SchoolManagementSystem.Infrastructure.Context;
-using SchoolManagementSystem.Infrastructure.Interfaces;
-using SchoolManagementSystem.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 #endregion
 
 #region Services Dependency Injection 
-builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddInfrastructureDependencies();
 #endregion
 
 var app = builder.Build();
