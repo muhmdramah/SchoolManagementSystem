@@ -10,7 +10,7 @@ namespace SchoolManagementSystem.Data.Entities
         public Subject()
         {
             StudentsSubjects = new HashSet<StudentSubject>();
-            DepartmetsSubjects = new HashSet<DepartmentSubject>();
+            DepartmentSubjects = new HashSet<DepartmentSubject>();
         }
 
         [Key]
@@ -24,7 +24,7 @@ namespace SchoolManagementSystem.Data.Entities
         public DateTime Period { get; set; }
 
         public virtual ICollection<StudentSubject> StudentsSubjects { get; set; }
-        public virtual ICollection<DepartmentSubject> DepartmetsSubjects { get; set; }
+        public virtual ICollection<DepartmentSubject> DepartmentSubjects { get; set; }
     }
 
 }
