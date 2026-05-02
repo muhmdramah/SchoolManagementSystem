@@ -22,6 +22,11 @@ namespace SchoolManagementSystem.Service.Implementations
         {
             return await _studentRepository.GetAllAsync();
         }
+
+        public async Task<Student> GetStudentByIdAsync(int id)
+        {
+            return await _studentRepository.GetByIdAsync(id);
+        }
         #endregion
     }
 }
