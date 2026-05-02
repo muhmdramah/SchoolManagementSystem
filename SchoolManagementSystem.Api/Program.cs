@@ -1,7 +1,9 @@
+#region Namespaces
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementSystem.Infrastructure;
 using SchoolManagementSystem.Infrastructure.Context;
 using SchoolManagementSystem.Service;
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,7 @@ builder.Services.AddInfrastructureDependencies()
     .AddServiceDependencies();
 #endregion
 
+#region Caching Configuration
 builder.Services.AddOutputCache(options =>
 {
     options.DefaultExpirationTimeSpan = TimeSpan.FromMinutes(10); // Cache responses for 10 minutes by default
@@ -34,10 +37,12 @@ builder.Services.AddOutputCache(options =>
         policy.Tag(["single-student"]);
     });
 });
+#endregion
+
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+#region Swagger and OpenApi
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -48,7 +53,11 @@ if (app.Environment.IsDevelopment())
     });
     app.MapOpenApi();
 }
+#endregion
 
+// Configure the HTTP request pipeline.
+
+#region Middlwares
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -56,5 +65,6 @@ app.UseAuthorization();
 app.UseOutputCache();
 
 app.MapControllers();
+#endregion
 
 app.Run();
