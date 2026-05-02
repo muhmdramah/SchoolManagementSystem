@@ -44,12 +44,19 @@ namespace SchoolManagementSystem.Infrastructure.Repositories
         public T Update(T entity)
         {
             var result = _dbSet.Update(entity);
+            _context.SaveChanges();
             return result.Entity;
         }
 
-        public void Delete(T entity)
+        public async Task DeleteByIdAsync(int id)
         {
-            _dbSet.Remove(entity);
+            var entity = await _dbSet.FindAsync(id);
+
+            if (entity != null)
+            {
+                _dbSet.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
         #endregion
     }

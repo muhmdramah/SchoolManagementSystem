@@ -27,6 +27,11 @@ namespace SchoolManagementSystem.Service.Implementations
         {
             return await _studentRepository.GetByIdAsync(id);
         }
+
+        public async Task DeleteStudentByIdAsync(int id)
+        {
+            await _studentRepository.DeleteByIdAsync(id);
+        }
         #endregion
     }
 }

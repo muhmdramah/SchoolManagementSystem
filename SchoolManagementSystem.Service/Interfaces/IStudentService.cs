@@ -6,5 +6,6 @@ namespace SchoolManagementSystem.Service.Interfaces
     {
         public Task<ICollection<Student>> GetStudentsAsync();
         public Task<Student> GetStudentByIdAsync(int id);
+        public Task DeleteStudentByIdAsync(int id);
     }
 }

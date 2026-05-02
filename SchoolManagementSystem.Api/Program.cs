@@ -19,6 +19,22 @@ builder.Services.AddInfrastructureDependencies()
     .AddServiceDependencies();
 #endregion
 
+builder.Services.AddOutputCache(options =>
+{
+    options.DefaultExpirationTimeSpan = TimeSpan.FromMinutes(10); // Cache responses for 10 minutes by default
+    options.MaximumBodySize = 1024 * 1024; // Cache responses up to 1 MB in size
+    options.SizeLimit = 100 * 1024 * 1024; // Set the total cache size limit to 100 MB
+    options.UseCaseSensitivePaths = false; // Treat paths as case-insensitive for caching
+
+    options.AddPolicy("CacheSingleStudentResponse", policy =>
+    {
+        policy.SetVaryByRouteValue(["id"]) // Vary cache by the "id" route parameter
+              .Expire(TimeSpan.FromSeconds(10)); // Cache responses for 10 seconds
+
+        policy.Tag(["single-student"]);
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -36,6 +52,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseOutputCache();
 
 app.MapControllers();
 

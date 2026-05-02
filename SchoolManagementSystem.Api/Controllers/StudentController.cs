@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using SchoolManagementSystem.Service.Interfaces;
 
 namespace SchoolManagementSystem.Api.Controllers
@@ -8,13 +9,16 @@ namespace SchoolManagementSystem.Api.Controllers
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _studentService;
+        private readonly IOutputCacheStore _outputCacheStore;
 
-        public StudentController(IStudentService studentService)
+        public StudentController(IStudentService studentService, IOutputCacheStore outputCacheStore)
         {
             _studentService = studentService;
+            _outputCacheStore = outputCacheStore;
         }
 
         [HttpGet]
+        [OutputCache(Duration = 120)]
         public async Task<IActionResult> GetStudents()
         {
             var students = await _studentService.GetStudentsAsync();
@@ -26,6 +30,8 @@ namespace SchoolManagementSystem.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [OutputCache(PolicyName = "CacheSingleStudentResponse")]
+        //[OutputCache(Duration = 120, VaryByRouteValueNames = new[] { "id" })]
         public async Task<IActionResult> GetStudent(int id)
         {
             var student = await _studentService.GetStudentByIdAsync(id);
@@ -34,6 +40,18 @@ namespace SchoolManagementSystem.Api.Controllers
                 return NotFound("Student not found!");
 
             return Ok(student);
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            await _studentService.DeleteStudentByIdAsync(id);
+
+            // Invalidate the cache for the deleted student
+            await _outputCacheStore.EvictByTagAsync("single-student", default);
+
+            return Ok("Student deleted successfully!");
         }
     }
 }
