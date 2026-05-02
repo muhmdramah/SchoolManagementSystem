@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.AspNetCore.RateLimiting;
 using SchoolManagementSystem.Service.Interfaces;
 
 namespace SchoolManagementSystem.Api.Controllers
@@ -19,6 +20,7 @@ namespace SchoolManagementSystem.Api.Controllers
 
         [HttpGet]
         [OutputCache(Duration = 120)]
+        [EnableRateLimiting("GlobalRateLimiter")]
         public async Task<IActionResult> GetStudents()
         {
             var students = await _studentService.GetStudentsAsync();
@@ -32,6 +34,7 @@ namespace SchoolManagementSystem.Api.Controllers
         [HttpGet("{id}")]
         [OutputCache(PolicyName = "CacheSingleStudentResponse")]
         //[OutputCache(Duration = 120, VaryByRouteValueNames = new[] { "id" })]
+        [EnableRateLimiting("GlobalRateLimiter")]
         public async Task<IActionResult> GetStudent(int id)
         {
             var student = await _studentService.GetStudentByIdAsync(id);
@@ -42,8 +45,8 @@ namespace SchoolManagementSystem.Api.Controllers
             return Ok(student);
         }
 
-
         [HttpDelete("{id}")]
+        [EnableRateLimiting("GlobalRateLimiter")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
             await _studentService.DeleteStudentByIdAsync(id);

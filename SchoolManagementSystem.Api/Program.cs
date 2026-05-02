@@ -1,4 +1,5 @@
 #region Namespaces
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementSystem.Infrastructure;
 using SchoolManagementSystem.Infrastructure.Context;
@@ -39,6 +40,19 @@ builder.Services.AddOutputCache(options =>
 });
 #endregion
 
+#region Token Bucket Rate Limiters
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddTokenBucketLimiter("GlobalRateLimiter", config =>
+    {
+        config.TokenLimit = 100;
+        config.QueueLimit = 10;
+        config.TokensPerPeriod = 20;
+        config.ReplenishmentPeriod = TimeSpan.FromSeconds(10);
+        config.AutoReplenishment = true;
+    });
+});
+#endregion
 
 var app = builder.Build();
 
