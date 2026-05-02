@@ -1,9 +1,11 @@
 #region Namespaces
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementSystem.Infrastructure;
 using SchoolManagementSystem.Infrastructure.Context;
 using SchoolManagementSystem.Service;
+using System.IO.Compression;
 #endregion
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,6 +56,35 @@ builder.Services.AddRateLimiter(options =>
 });
 #endregion
 
+#region Response Compression
+// cnfigure the proccess of the response compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.Providers.Add<GzipCompressionProvider>();
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.EnableForHttps = true;
+    options.MimeTypes = new[]
+    {
+        "application/json",
+        "application/xml",
+        "text/plain",
+        "text/html"
+    };
+});
+
+// configure brotli algorithm for response compression
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+
+// configure gzip algorithm for response compression
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+#endregion
+
 var app = builder.Build();
 
 #region Swagger and OpenApi
@@ -77,6 +108,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseOutputCache();
+
+app.UseResponseCompression();
 
 app.MapControllers();
 #endregion
