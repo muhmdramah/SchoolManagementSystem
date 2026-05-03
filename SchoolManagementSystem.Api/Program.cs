@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using SchoolManagementSystem.Core;
 using SchoolManagementSystem.Infrastructure;
 using SchoolManagementSystem.Infrastructure.Context;
 using SchoolManagementSystem.Service;
@@ -22,6 +23,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 #region Services Dependency Injection 
 builder.Services.AddInfrastructureDependencies()
     .AddServiceDependencies();
+
+builder.Services.AddCoreDependencies();
 #endregion
 
 #region Caching Configuration
