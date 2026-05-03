@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using SchoolManagementSystem.Core.Bases;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Models;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Responses;
 using SchoolManagementSystem.Service.Interfaces;
 
 namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
 {
-    public class GetStudentByIdHandler : IRequestHandler<GetStudentByIdQuery, GetStudentByIdResponse>
+    public class GetStudentByIdHandler : ResponseHandler, IRequestHandler<GetStudentByIdQuery, Response<GetStudentByIdResponse>>
     {
         #region Fields
         private readonly IStudentService _studentService;
@@ -22,13 +23,16 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
         #endregion
 
         #region Handlers
-        public async Task<GetStudentByIdResponse> Handle(GetStudentByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Response<GetStudentByIdResponse>> Handle(GetStudentByIdQuery request, CancellationToken cancellationToken)
         {
             var student = await _studentService.GetStudentByIdAsync(request.Id);
 
             var response = _mapper.Map<GetStudentByIdResponse>(student);
 
-            return response;
+            if (response is null)
+                return NotFound<GetStudentByIdResponse>();
+
+            return Success(response);
         }
         #endregion
     }

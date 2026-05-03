@@ -26,7 +26,7 @@ namespace SchoolManagementSystem.Api.Controllers
         {
             var response = await _mediator.Send(new GetAllStudentsQuery());
 
-            if (response == null || !response.Any())
+            if (response == null || !response.Data.Any())
                 return NotFound("No students found!");
 
             return Ok(response);
