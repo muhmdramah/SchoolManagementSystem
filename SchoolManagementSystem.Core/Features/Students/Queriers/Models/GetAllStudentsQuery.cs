@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using SchoolManagementSystem.Data.Entities;
+using SchoolManagementSystem.Core.Features.Students.Queriers.Responses;
 
 namespace SchoolManagementSystem.Core.Features.Students.Queriers.Models
 {
-    public class GetAllStudentsQuery : IRequest<ICollection<Student>>
+    public class GetAllStudentsQuery : IRequest<ICollection<GetAllStudentsResponse>>
     {
     }
 }

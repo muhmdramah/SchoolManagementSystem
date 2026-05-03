@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using SchoolManagementSystem.Data.Entities;
+using SchoolManagementSystem.Core.Features.Students.Queriers.Responses;
 
 namespace SchoolManagementSystem.Core.Features.Students.Queriers.Models
 {
-    public class GetStudentByIdQuery : IRequest<Student>
+    public class GetStudentByIdQuery : IRequest<GetStudentByIdResponse>
     {
         #region Fields
         private int _id;

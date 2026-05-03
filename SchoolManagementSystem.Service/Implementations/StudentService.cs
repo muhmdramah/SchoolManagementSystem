@@ -1,6 +1,7 @@
 ﻿using SchoolManagementSystem.Data.Entities;
 using SchoolManagementSystem.Infrastructure.Interfaces;
 using SchoolManagementSystem.Service.Interfaces;
+using System.Linq.Expressions;
 
 namespace SchoolManagementSystem.Service.Implementations
 {
@@ -20,12 +21,12 @@ namespace SchoolManagementSystem.Service.Implementations
         #region Queries
         public async Task<ICollection<Student>> GetStudentsAsync()
         {
-            return await _studentRepository.GetAllAsync();
+            return await _studentRepository.GetAllAsync(new Expression<Func<Student, object>>[] { s => s.Department });
         }
 
         public async Task<Student> GetStudentByIdAsync(int id)
         {
-            return await _studentRepository.GetByIdAsync(id);
+            return await _studentRepository.GetByIdAsync(id, new Expression<Func<Student, object>>[] { s => s.Department });
         }
 
         public async Task DeleteStudentByIdAsync(int id)

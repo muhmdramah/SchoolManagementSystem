@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolManagementSystem.Infrastructure.Context;
 using SchoolManagementSystem.Infrastructure.Interfaces;
+using System.Linq.Expressions;
 
 namespace SchoolManagementSystem.Infrastructure.Repositories
 {
@@ -20,14 +21,38 @@ namespace SchoolManagementSystem.Infrastructure.Repositories
         #endregion
 
         #region Queries
-        public async Task<ICollection<T>> GetAllAsync()
+        public async Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[]? includeProperties)
         {
-            return await _dbSet.ToListAsync();
+            IQueryable<T> query = _dbSet;
+
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            var result = await query.ToListAsync();
+
+            return result;
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[]? includeProperties)
         {
-            return await _dbSet.FindAsync(id);
+            IQueryable<T> query = _dbSet;
+
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            var result = await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "StudentId") == id);
+
+            return result!;
         }
         #endregion
 
