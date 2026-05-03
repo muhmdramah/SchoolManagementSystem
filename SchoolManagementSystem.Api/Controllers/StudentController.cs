@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.RateLimiting;
-using SchoolManagementSystem.Service.Interfaces;
+using SchoolManagementSystem.Core.Features.Students.Queriers.Models;
 
 namespace SchoolManagementSystem.Api.Controllers
 {
@@ -9,12 +10,12 @@ namespace SchoolManagementSystem.Api.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly IStudentService _studentService;
+        private readonly IMediator _mediator;
         private readonly IOutputCacheStore _outputCacheStore;
 
-        public StudentController(IStudentService studentService, IOutputCacheStore outputCacheStore)
+        public StudentController(IMediator mediator, IOutputCacheStore outputCacheStore)
         {
-            _studentService = studentService;
+            _mediator = mediator;
             _outputCacheStore = outputCacheStore;
         }
 
@@ -23,12 +24,12 @@ namespace SchoolManagementSystem.Api.Controllers
         [EnableRateLimiting("GlobalRateLimiter")]
         public async Task<IActionResult> GetStudents()
         {
-            var students = await _studentService.GetStudentsAsync();
+            var response = await _mediator.Send(new GetAllStudentsQuery());
 
-            if (students == null || !students.Any())
+            if (response == null || !response.Any())
                 return NotFound("No students found!");
 
-            return Ok(students);
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -37,24 +38,24 @@ namespace SchoolManagementSystem.Api.Controllers
         [EnableRateLimiting("GlobalRateLimiter")]
         public async Task<IActionResult> GetStudent(int id)
         {
-            var student = await _studentService.GetStudentByIdAsync(id);
+            var response = await _mediator.Send(new GetStudentByIdQuery(id));
 
-            if (student == null)
-                return NotFound("Student not found!");
+            if (response == null)
+                return NotFound($"Student with id {id} was not found!");
 
-            return Ok(student);
+            return Ok(response);
         }
 
-        [HttpDelete("{id}")]
-        [EnableRateLimiting("GlobalRateLimiter")]
-        public async Task<IActionResult> DeleteStudent(int id)
-        {
-            await _studentService.DeleteStudentByIdAsync(id);
+        //[HttpDelete("{id}")]
+        //[EnableRateLimiting("GlobalRateLimiter")]
+        //public async Task<IActionResult> DeleteStudent(int id)
+        //{
+        //    await _studentService.DeleteStudentByIdAsync(id);
 
-            // Invalidate the cache for the deleted student
-            await _outputCacheStore.EvictByTagAsync("single-student", default);
+        //    // Invalidate the cache for the deleted student
+        //    await _outputCacheStore.EvictByTagAsync("single-student", default);
 
-            return Ok("Student deleted successfully!");
-        }
+        //    return Ok("Student deleted successfully!");
+        //}
     }
 }
