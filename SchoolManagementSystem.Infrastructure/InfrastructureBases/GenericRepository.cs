@@ -54,8 +54,20 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
 
             return result!;
         }
+
+        public IQueryable<T> GetTableNoTracking()
+        {
+            return _dbSet.AsNoTracking().AsQueryable();
+
+        }
+
+        public IQueryable<T> GetTableAsTracking()
+        {
+            return _dbSet.AsTracking().AsQueryable();
+        }
         #endregion
 
+        #region Commands
         public virtual async Task<T> AddAsync(T entity)
         {
             var result = await _dbSet.AddAsync(entity);
@@ -75,17 +87,6 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
         {
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
-        }
-
-        public IQueryable<T> GetTableNoTracking()
-        {
-            return _dbSet.AsNoTracking().AsQueryable();
-
-        }
-
-        public IQueryable<T> GetTableAsTracking()
-        {
-            return _dbSet.AsTracking().AsQueryable();
         }
 
         public virtual async Task AddRangeAsync(ICollection<T> entities)
@@ -112,7 +113,9 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
             }
             await _context.SaveChangesAsync();
         }
+        #endregion
 
+        #region Database Operations
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
@@ -132,5 +135,6 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
         {
             return _context.Database.BeginTransaction();
         }
+        #endregion
     }
 }
