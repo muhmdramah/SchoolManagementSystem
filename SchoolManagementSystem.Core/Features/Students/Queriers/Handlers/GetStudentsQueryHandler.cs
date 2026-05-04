@@ -29,10 +29,10 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
         {
             var students = await _studentService.GetStudentsAsync();
 
-            var response = _mapper.Map<ICollection<GetAllStudentsResponse>>(students);
-
-            if (response is null)
+            if (students is null)
                 return NotFound<ICollection<GetAllStudentsResponse>>();
+
+            var response = _mapper.Map<ICollection<GetAllStudentsResponse>>(students);
 
             return Success(response);
         }
@@ -41,14 +41,13 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
         {
             var student = await _studentService.GetStudentByIdAsync(request.Id);
 
-            var response = _mapper.Map<GetStudentByIdResponse>(student);
-
-            if (response is null)
+            if (student is null)
                 return NotFound<GetStudentByIdResponse>();
+
+            var response = _mapper.Map<GetStudentByIdResponse>(student);
 
             return Success(response);
         }
         #endregion
-
     }
 }
