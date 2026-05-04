@@ -1,5 +1,5 @@
 ﻿using SchoolManagementSystem.Data.Entities;
-using SchoolManagementSystem.Infrastructure.Interfaces;
+using SchoolManagementSystem.Infrastructure.InfrastructureBases;
 using SchoolManagementSystem.Service.Interfaces;
 using System.Linq.Expressions;
 
@@ -29,9 +29,9 @@ namespace SchoolManagementSystem.Service.Implementations
             return await _studentRepository.GetByIdAsync(id, new Expression<Func<Student, object>>[] { s => s.Department });
         }
 
-        public async Task DeleteStudentByIdAsync(int id)
+        public async Task DeleteStudentAsync(Student student)
         {
-            await _studentRepository.DeleteByIdAsync(id);
+            await _studentRepository.DeleteAsync(student);
         }
         #endregion
     }

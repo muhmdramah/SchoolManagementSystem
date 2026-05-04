@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using SchoolManagementSystem.Infrastructure.Context;
-using SchoolManagementSystem.Infrastructure.Interfaces;
 using System.Linq.Expressions;
 
-namespace SchoolManagementSystem.Infrastructure.Repositories
+namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
@@ -56,33 +56,81 @@ namespace SchoolManagementSystem.Infrastructure.Repositories
         }
         #endregion
 
-        #region Commands
         public async Task<T> AddAsync(T entity)
         {
             var result = await _dbSet.AddAsync(entity);
 
             await _context.SaveChangesAsync();
 
-            return result.Entity;
+            return entity;
         }
 
-        public T Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
-            var result = _dbSet.Update(entity);
-            _context.SaveChanges();
-            return result.Entity;
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteByIdAsync(int id)
+        public async Task DeleteAsync(T entity)
         {
-            var entity = await _dbSet.FindAsync(id);
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
 
-            if (entity != null)
+        public IQueryable<T> GetTableNoTracking()
+        {
+            return _dbSet.AsNoTracking().AsQueryable();
+
+        }
+
+        public IQueryable<T> GetTableAsTracking()
+        {
+            return _dbSet.AsTracking().AsQueryable();
+        }
+
+        public async Task AddRangeAsync(ICollection<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateRangeAsync(ICollection<T> entities)
+        {
+            foreach (var entity in entities)
             {
-                _dbSet.Remove(entity);
-                await _context.SaveChangesAsync();
+                _context.Entry(entity).State = EntityState.Deleted;
             }
+
+            await _context.SaveChangesAsync();
         }
-        #endregion
+
+        public async Task DeleteRangeAsync(ICollection<T> entities)
+        {
+            foreach (var entity in entities)
+            {
+                _dbSet.Entry(entity).State = EntityState.Deleted;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public void Commit()
+        {
+            _context.Database.CommitTransaction();
+        }
+
+        public void Rollback()
+        {
+            _context.Database.RollbackTransaction();
+        }
+
+        public IDbContextTransaction BeginTransaction()
+        {
+            return _context.Database.BeginTransaction();
+        }
     }
 }

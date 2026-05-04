@@ -1,4 +1,5 @@
 ﻿using SchoolManagementSystem.Data.Entities;
+using SchoolManagementSystem.Infrastructure.InfrastructureBases;
 
 namespace SchoolManagementSystem.Infrastructure.Interfaces
 {

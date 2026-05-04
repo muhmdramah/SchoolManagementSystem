@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SchoolManagementSystem.Infrastructure.InfrastructureBases;
 using SchoolManagementSystem.Infrastructure.Interfaces;
 using SchoolManagementSystem.Infrastructure.Repositories;
 
