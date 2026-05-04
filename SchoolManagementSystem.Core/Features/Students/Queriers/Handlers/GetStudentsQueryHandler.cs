@@ -7,7 +7,9 @@ using SchoolManagementSystem.Service.Interfaces;
 
 namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
 {
-    public class GetStudentByIdQueryHandler : ResponseHandler, IRequestHandler<GetStudentByIdQuery, Response<GetStudentByIdResponse>>
+    public class GetStudentsQueryHandler : ResponseHandler,
+        IRequestHandler<GetAllStudentsQuery, Response<ICollection<GetAllStudentsResponse>>>,
+        IRequestHandler<GetStudentByIdQuery, Response<GetStudentByIdResponse>>
     {
         #region Fields
         private readonly IStudentService _studentService;
@@ -15,7 +17,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
         #endregion
 
         #region Constructors
-        public GetStudentByIdQueryHandler(IStudentService studentService, IMapper mapper)
+        public GetStudentsQueryHandler(IStudentService studentService, IMapper mapper)
         {
             _studentService = studentService;
             _mapper = mapper;
@@ -23,6 +25,18 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
         #endregion
 
         #region Handlers
+        public async Task<Response<ICollection<GetAllStudentsResponse>>> Handle(GetAllStudentsQuery request, CancellationToken cancellationToken)
+        {
+            var students = await _studentService.GetStudentsAsync();
+
+            var response = _mapper.Map<ICollection<GetAllStudentsResponse>>(students);
+
+            if (response is null)
+                return NotFound<ICollection<GetAllStudentsResponse>>();
+
+            return Success(response);
+        }
+
         public async Task<Response<GetStudentByIdResponse>> Handle(GetStudentByIdQuery request, CancellationToken cancellationToken)
         {
             var student = await _studentService.GetStudentByIdAsync(request.Id);
@@ -35,5 +49,6 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
             return Success(response);
         }
         #endregion
+
     }
 }

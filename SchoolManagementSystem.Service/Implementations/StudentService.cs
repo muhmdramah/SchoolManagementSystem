@@ -36,7 +36,9 @@ namespace SchoolManagementSystem.Service.Implementations
                                            .FirstOrDefaultAsync(s => s.StudentId == id);
             return student;
         }
+        #endregion
 
+        #region Commands
         public async Task DeleteStudentAsync(Student student)
         {
             await _genericRepository.DeleteAsync(student);
