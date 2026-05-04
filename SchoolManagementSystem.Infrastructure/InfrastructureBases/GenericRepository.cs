@@ -21,7 +21,7 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
         #endregion
 
         #region Queries
-        public async Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[]? includeProperties)
+        public virtual async Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[]? includeProperties)
         {
             IQueryable<T> query = _dbSet;
 
@@ -38,7 +38,7 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
             return result;
         }
 
-        public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[]? includeProperties)
+        public virtual async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[]? includeProperties)
         {
             IQueryable<T> query = _dbSet;
 
@@ -56,7 +56,7 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
         }
         #endregion
 
-        public async Task<T> AddAsync(T entity)
+        public virtual async Task<T> AddAsync(T entity)
         {
             var result = await _dbSet.AddAsync(entity);
 
@@ -65,13 +65,13 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
             return entity;
         }
 
-        public async Task UpdateAsync(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T entity)
+        public virtual async Task DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
@@ -88,13 +88,13 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
             return _dbSet.AsTracking().AsQueryable();
         }
 
-        public async Task AddRangeAsync(ICollection<T> entities)
+        public virtual async Task AddRangeAsync(ICollection<T> entities)
         {
             await _dbSet.AddRangeAsync(entities);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateRangeAsync(ICollection<T> entities)
+        public virtual async Task UpdateRangeAsync(ICollection<T> entities)
         {
             foreach (var entity in entities)
             {
@@ -104,7 +104,7 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteRangeAsync(ICollection<T> entities)
+        public virtual async Task DeleteRangeAsync(ICollection<T> entities)
         {
             foreach (var entity in entities)
             {
