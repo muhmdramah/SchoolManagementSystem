@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.RateLimiting;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Models;
+using SchoolManagementSystem.Data.ApplicationMetadata;
 
 namespace SchoolManagementSystem.Api.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
     {
@@ -19,7 +20,7 @@ namespace SchoolManagementSystem.Api.Controllers
             _outputCacheStore = outputCacheStore;
         }
 
-        [HttpGet]
+        [HttpGet(Router.StudentRouting.GetAllStudents)]
         [OutputCache(Duration = 120)]
         [EnableRateLimiting("GlobalRateLimiter")]
         public async Task<IActionResult> GetStudents()
@@ -32,7 +33,7 @@ namespace SchoolManagementSystem.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet(Router.StudentRouting.GetStudentById)]
         [OutputCache(PolicyName = "CacheSingleStudentResponse")]
         //[OutputCache(Duration = 120, VaryByRouteValueNames = new[] { "id" })]
         [EnableRateLimiting("GlobalRateLimiter")]
