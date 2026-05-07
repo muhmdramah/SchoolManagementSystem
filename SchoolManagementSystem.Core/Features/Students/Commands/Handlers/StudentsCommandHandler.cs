@@ -30,10 +30,13 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
 
             var response = await _studentService.AddStudentAsync(student);
 
-            if (response != "Student created successfully!")
-                return BadRequest<string>("Failed to create the student.");
-            else
+            if (response == "exists")
+                return UnprocessableEntity<string>("Failed to create the student.");
+
+            else if (response == "created")
                 return Created<string>("Student created successfully!");
+            else
+                return BadRequest<string>("Failed to create the student.");
         }
         #endregion
     }

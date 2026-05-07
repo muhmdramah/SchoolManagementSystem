@@ -13,6 +13,7 @@
 
             public const string GetAllStudents = $"{Prefix}s/";
             public const string GetStudentById = Prefix + SingelRoute;
+            public const string Create = Prefix + "/create";
         }
 
         // prefix: /api/v1/student

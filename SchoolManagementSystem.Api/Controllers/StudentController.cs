@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.AspNetCore.RateLimiting;
+using SchoolManagementSystem.Core.Features.Students.Commands.Models;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Models;
 using SchoolManagementSystem.Data.ApplicationMetadata;
 
@@ -43,6 +44,17 @@ namespace SchoolManagementSystem.Api.Controllers
 
             if (response == null)
                 return NotFound($"Student with id {id} was not found!");
+
+            return Ok(response);
+        }
+
+        [HttpPost(Router.StudentRouting.Create)]
+        public async Task<IActionResult> CreateStudent([FromBody] CreateStudentCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            // Invalidate the cache for the deleted student
+            await _outputCacheStore.EvictByTagAsync("single-student", default);
 
             return Ok(response);
         }

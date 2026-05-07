@@ -46,12 +46,12 @@ namespace SchoolManagementSystem.Service.Implementations
                 .GetTableNoTracking()
                 .FirstOrDefaultAsync(s => s.StudentName.Equals(student.StudentName));
 
-            if (studentExists is not null)
-                return "Student you are trying to add is already exist... try add anothe one!";
+            if (studentExists != null)
+                return "exists";
 
             await _genericRepository.AddAsync(student);
 
-            return "Student created successfully!";
+            return "created";
         }
 
         public async Task DeleteStudentAsync(Student student)
