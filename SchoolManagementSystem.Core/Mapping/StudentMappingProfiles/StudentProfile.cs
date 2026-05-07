@@ -8,8 +8,8 @@ namespace SchoolManagementSystem.Core.Mapping.StudentMappingProfiles
         {
             GetAllStudentsMapping();
             GetStudentByIdMapping();
-            GetCreateStudentMapping();
-            GetUpdateStudentMapping();
+            CreateStudentMapping();
+            UpdateStudentMapping();
         }
     }
 }

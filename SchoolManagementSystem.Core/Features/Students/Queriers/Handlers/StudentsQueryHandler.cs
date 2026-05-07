@@ -7,7 +7,7 @@ using SchoolManagementSystem.Service.Interfaces;
 
 namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
 {
-    public class GetStudentsQueryHandler : ResponseHandler,
+    public class StudentsQueryHandler : ResponseHandler,
         IRequestHandler<GetAllStudentsQuery, Response<ICollection<GetAllStudentsResponse>>>,
         IRequestHandler<GetStudentByIdQuery, Response<GetStudentByIdResponse>>
     {
@@ -17,7 +17,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
         #endregion
 
         #region Constructors
-        public GetStudentsQueryHandler(IStudentService studentService, IMapper mapper)
+        public StudentsQueryHandler(IStudentService studentService, IMapper mapper)
         {
             _studentService = studentService;
             _mapper = mapper;

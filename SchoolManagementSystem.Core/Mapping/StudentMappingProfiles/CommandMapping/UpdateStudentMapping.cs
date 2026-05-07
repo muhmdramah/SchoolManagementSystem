@@ -1,15 +1,10 @@
-﻿using SchoolManagementSystem.Core.Features.Students.Commands.Responses;
-using SchoolManagementSystem.Data.Entities;
-
-namespace SchoolManagementSystem.Core.Mapping.StudentMappingProfiles
+﻿namespace SchoolManagementSystem.Core.Mapping.StudentMappingProfiles
 {
     public partial class StudentProfile
     {
-        public void GetUpdateStudentMapping()
+        public void UpdateStudentMapping()
         {
-            CreateMap<Student, UpdateStudentResponse>()
-                .ForMember(dest => dest.DepartmentName,
-                    opt => opt.MapFrom(src => src.Department.DepartmentName));
+            //CreateMap<UpdateStudentC  ommand, Student>();
         }
     }
 }

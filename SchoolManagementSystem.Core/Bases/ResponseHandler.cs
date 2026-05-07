@@ -67,6 +67,16 @@
                 Meta = Meta
             };
         }
+
+        public Response<T> UnprocessableEntity<T>(T entity, object Meta = null)
+        {
+            return new Response<T>()
+            {
+                StatusCode = System.Net.HttpStatusCode.UnprocessableEntity,
+                Succeeded = false,
+                Message = "Unprocessable Entity",
+            };
+        }
     }
 
 }

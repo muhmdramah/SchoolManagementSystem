@@ -39,6 +39,21 @@ namespace SchoolManagementSystem.Service.Implementations
         #endregion
 
         #region Commands
+        public async Task<string> AddStudentAsync(Student student)
+        {
+            // dont use threading with queryable.. it will cause issues with the db context.
+            var studentExists = _genericRepository
+                .GetTableNoTracking()
+                .FirstOrDefaultAsync(s => s.StudentName.Equals(student.StudentName));
+
+            if (studentExists is not null)
+                return "Student you are trying to add is already exist... try add anothe one!";
+
+            await _genericRepository.AddAsync(student);
+
+            return "Student created successfully!";
+        }
+
         public async Task DeleteStudentAsync(Student student)
         {
             await _genericRepository.DeleteAsync(student);
