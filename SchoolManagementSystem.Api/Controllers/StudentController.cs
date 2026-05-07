@@ -28,7 +28,7 @@ namespace SchoolManagementSystem.Api.Controllers
             if (response == null || !response.Data.Any())
                 return NotFound("No students found!");
 
-            return Ok(response);
+            return NewResult(response);
         }
 
         [HttpGet(Router.StudentRouting.GetStudentById)]
@@ -42,7 +42,7 @@ namespace SchoolManagementSystem.Api.Controllers
             if (response == null)
                 return NotFound($"Student with id {id} was not found!");
 
-            return Ok(response);
+            return NewResult(response);
         }
 
         [HttpPost(Router.StudentRouting.Create)]
@@ -53,7 +53,7 @@ namespace SchoolManagementSystem.Api.Controllers
             // Invalidate the cache for the deleted student
             await _outputCacheStore.EvictByTagAsync("single-student", default);
 
-            return Ok(response);
+            return NewResult(response);
         }
 
         //[HttpDelete("{id}")]
