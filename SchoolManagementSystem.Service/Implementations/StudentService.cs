@@ -42,7 +42,7 @@ namespace SchoolManagementSystem.Service.Implementations
         public async Task<string> AddStudentAsync(Student student)
         {
             // dont use threading with queryable.. it will cause issues with the db context.
-            var studentExists = _genericRepository
+            var studentExists = await _genericRepository
                 .GetTableNoTracking()
                 .FirstOrDefaultAsync(s => s.StudentName.Equals(student.StudentName));
 
