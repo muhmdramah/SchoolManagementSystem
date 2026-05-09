@@ -1,13 +1,18 @@
 ﻿using FluentValidation;
 using SchoolManagementSystem.Core.Features.Students.Commands.Models;
+using SchoolManagementSystem.Service.Interfaces;
 
 namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
 {
     public class CreateStudentValidator : AbstractValidator<CreateStudentCommand>
     {
-        public CreateStudentValidator()
+        private readonly IStudentService _studentService;
+
+        public CreateStudentValidator(IStudentService studentService)
         {
             ApplyValidationRules();
+            CustomValidations();
+            _studentService = studentService;
         }
 
         private void ApplyValidationRules()
@@ -28,6 +33,15 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
 
             RuleFor(x => x.DepartmentId)
                 .GreaterThan(0).WithMessage("رقم القسم لازم يكون أكبر من صفر!");
+        }
+
+        private void CustomValidations()
+        {
+            RuleFor(x => x.StudentName)
+                .MustAsync(async (studentName, cancellation) =>
+                {
+                    return !await _studentService.IsThisStudentExistAsync(studentName);
+                }).WithMessage("الطالب ده موجود بالفعل!");
         }
     }
 }

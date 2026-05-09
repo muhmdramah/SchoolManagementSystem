@@ -8,5 +8,6 @@ namespace SchoolManagementSystem.Service.Interfaces
         public Task<Student> GetStudentByIdAsync(int id);
         public Task<string> AddStudentAsync(Student student);
         public Task DeleteStudentAsync(Student student);
+        public Task<bool> IsThisStudentExistAsync(string studentName);
     }
 }
