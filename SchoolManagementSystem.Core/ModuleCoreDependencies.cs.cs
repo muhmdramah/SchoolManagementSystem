@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using SchoolManagementSystem.Core.Behaviors;
 using System.Reflection;
-
 namespace SchoolManagementSystem.Core
 {
     public static class ModuleCoreDependencies
@@ -14,6 +16,10 @@ namespace SchoolManagementSystem.Core
             // AutoMapper registrations
             services.AddAutoMapper(cfg =>
                 cfg.AddMaps(Assembly.GetExecutingAssembly()));
+
+            // FluentValidation registrations
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             return services;
         }
