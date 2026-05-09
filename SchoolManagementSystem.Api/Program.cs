@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementSystem.Core;
+using SchoolManagementSystem.Core.Middlewares;
 using SchoolManagementSystem.Infrastructure;
 using SchoolManagementSystem.Infrastructure.Context;
 using SchoolManagementSystem.Service;
@@ -114,6 +115,8 @@ if (app.Environment.IsDevelopment())
 // Configure the HTTP request pipeline.
 
 #region Middlwares
+app.UseMiddleware<ErrorHandlerMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
