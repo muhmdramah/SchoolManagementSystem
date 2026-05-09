@@ -88,6 +88,14 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 });
 #endregion
 
+#region Memory Cache
+builder.Services.AddMemoryCache(options =>
+{
+    // Set the total cache size limit to 100 MB
+    options.SizeLimit = 100 * 1024 * 1024;
+});
+#endregion
+
 var app = builder.Build();
 
 #region Swagger and OpenApi

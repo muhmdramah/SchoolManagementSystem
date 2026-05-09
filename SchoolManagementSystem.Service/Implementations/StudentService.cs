@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using SchoolManagementSystem.Data.Entities;
 using SchoolManagementSystem.Infrastructure.InfrastructureBases;
 using SchoolManagementSystem.Service.Interfaces;
@@ -10,20 +12,43 @@ namespace SchoolManagementSystem.Service.Implementations
     {
         #region Fields
         private readonly IGenericRepository<Student> _genericRepository;
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger<StudentService> _logger;
+        private const string StudentsCacheKey = "students";
         #endregion
 
         #region Constructors
-        public StudentService(IGenericRepository<Student> genericRepository)
+        public StudentService(IGenericRepository<Student> genericRepository,
+            IMemoryCache memoryCache,
+            ILogger<StudentService> logger)
         {
             _genericRepository = genericRepository;
+            _memoryCache = memoryCache;
+            _logger = logger;
         }
         #endregion
 
         #region Queries
         public async Task<ICollection<Student>> GetStudentsAsync()
         {
-            return await _genericRepository
+            if (_memoryCache.TryGetValue(StudentsCacheKey, out ICollection<Student> cachedStudents))
+            {
+                _logger.LogInformation("Students retrieved from cache.");
+                return cachedStudents;
+            }
+
+            _logger.LogInformation("Students retrieved from database.");
+
+            var students = await _genericRepository
                 .GetAllAsync(new Expression<Func<Student, object>>[] { s => s.Department });
+
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
+                .SetSize(1);
+
+            _memoryCache.Set(StudentsCacheKey, students, cacheOptions);
+
+            return students;
         }
 
         public async Task<Student> GetStudentByIdAsync(int id)
@@ -49,6 +74,8 @@ namespace SchoolManagementSystem.Service.Implementations
             if (studentExists != null)
                 return "exists";
 
+            _memoryCache.Remove(StudentsCacheKey);
+
             await _genericRepository.AddAsync(student);
 
             return "created";
@@ -56,6 +83,8 @@ namespace SchoolManagementSystem.Service.Implementations
 
         public async Task DeleteStudentAsync(Student student)
         {
+            _memoryCache.Remove(StudentsCacheKey);
+
             await _genericRepository.DeleteAsync(student);
         }
         #endregion
