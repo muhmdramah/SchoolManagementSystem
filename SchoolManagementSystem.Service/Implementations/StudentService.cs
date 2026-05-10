@@ -73,6 +73,13 @@ namespace SchoolManagementSystem.Service.Implementations
             return "created";
         }
 
+        public async Task UpdateStudentAsync(Student student)
+        {
+            _memoryCache.Remove(StudentsCacheKey);
+
+            await _genericRepository.UpdateAsync(student);
+        }
+
         public async Task DeleteStudentAsync(Student student)
         {
             _memoryCache.Remove(StudentsCacheKey);
