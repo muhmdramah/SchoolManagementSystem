@@ -31,10 +31,10 @@ namespace SchoolManagementSystem.Service.Implementations
         #region Queries
         public async Task<ICollection<Student>> GetStudentsAsync()
         {
-            if (_memoryCache.TryGetValue(StudentsCacheKey, out ICollection<Student> cachedStudents))
+            if (_memoryCache.TryGetValue(StudentsCacheKey, out ICollection<Student>? cachedStudents))
             {
                 _logger.LogInformation("Students retrieved from cache.");
-                return cachedStudents;
+                return cachedStudents!;
             }
 
             _logger.LogInformation("Students retrieved from database.");
@@ -59,7 +59,7 @@ namespace SchoolManagementSystem.Service.Implementations
             var student = await _genericRepository.GetTableNoTracking()
                                            .Include(s => s.Department)
                                            .FirstOrDefaultAsync(s => s.StudentId == id);
-            return student;
+            return student!;
         }
         #endregion
 
