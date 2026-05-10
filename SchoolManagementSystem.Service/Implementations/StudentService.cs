@@ -91,16 +91,32 @@ namespace SchoolManagementSystem.Service.Implementations
         #endregion
 
         #region Helpers 
-        public async Task<bool> IsThisStudentExistAsync(string studentName)
+        public async Task<bool> IsThisStudentExistAsync(string studentName, int? studentId)
         {
-            var studentExists = _genericRepository
-                .GetTableNoTracking()
-                .FirstOrDefaultAsync(s => s.StudentName.Equals(studentName));
+            if (studentId.HasValue)
+            {
+                // logic with id
+                var studentExists = _genericRepository
+                    .GetTableNoTracking()
+                    .FirstOrDefaultAsync(s =>
+                        s.StudentName.Equals(studentName) & !s.StudentId.Equals(studentId));
 
-            if (studentExists is null)
-                return false;
+                if (studentExists is null)
+                    return false;
 
-            return true;
+                return true;
+            }
+            else
+            {
+                var studentExists = _genericRepository
+                    .GetTableNoTracking()
+                    .FirstOrDefaultAsync(s => s.StudentName.Equals(studentName));
+
+                if (studentExists is null)
+                    return false;
+
+                return true;
+            }
         }
         #endregion
     }

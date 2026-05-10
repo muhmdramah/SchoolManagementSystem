@@ -9,6 +9,6 @@ namespace SchoolManagementSystem.Service.Interfaces
         public Task<string> AddStudentAsync(Student student);
         public Task DeleteStudentAsync(Student student);
         public Task<string> UpdateStudentAsync(Student student);
-        public Task<bool> IsThisStudentExistAsync(string studentName);
+        Task<bool> IsThisStudentExistAsync(string studentName, int? studentId = null);
     }
 }
