@@ -56,6 +56,17 @@ namespace SchoolManagementSystem.Api.Controllers
             return NewResult(response);
         }
 
+        [HttpPut(Router.StudentRouting.Update)]
+        public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentCommand command)
+        {
+            var response = await _mediator.Send(command);
+
+            // Invalidate the cache for the deleted student
+            await _outputCacheStore.EvictByTagAsync("single-student", default);
+
+            return NewResult(response);
+        }
+
         //[HttpDelete("{id}")]
         //[EnableRateLimiting("GlobalRateLimiter")]
         //public async Task<IActionResult> DeleteStudent(int id)
