@@ -10,6 +10,7 @@ namespace SchoolManagementSystem.Core.Mapping.StudentMappingProfiles
             GetStudentByIdMapping();
             CreateStudentMapping();
             UpdateStudentMapping();
+            DeleteStudentMapping();
         }
     }
 }

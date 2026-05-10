@@ -82,11 +82,13 @@ namespace SchoolManagementSystem.Service.Implementations
             return "updated";
         }
 
-        public async Task DeleteStudentAsync(Student student)
+        public async Task<string> DeleteStudentAsync(Student student)
         {
             _memoryCache.Remove(StudentsCacheKey);
 
             await _genericRepository.DeleteAsync(student);
+
+            return "deleted";
         }
         #endregion
 

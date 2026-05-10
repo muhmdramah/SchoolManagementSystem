@@ -9,7 +9,8 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
 {
     public class StudentsCommandHandler : ResponseHandler,
         IRequestHandler<CreateStudentCommand, Response<string>>,
-        IRequestHandler<UpdateStudentCommand, Response<string>>
+        IRequestHandler<UpdateStudentCommand, Response<string>>,
+        IRequestHandler<DeleteStudentCommand, Response<string>>
     {
         #region Fields
         private readonly IStudentService _studentService;
@@ -52,6 +53,23 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
                 return Created<string>($"Student with id: {request.StudentId} was updated successfully!");
             else
                 return BadRequest<string>("Failed to update the student.");
+        }
+
+        public async Task<Response<string>> Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
+        {
+            var currentStudent = await _studentService.GetStudentByIdAsync(request.StudentId);
+
+            if (currentStudent is null)
+                return NotFound<string>("Student not found.");
+
+            var student = _mapper.Map<Student>(request);
+
+            var response = await _studentService.DeleteStudentAsync(student);
+
+            if (response == "deleted")
+                return Created<string>($"Student with id: {request.StudentId} was deleted successfully!");
+            else
+                return BadRequest<string>("Failed to delete the student.");
         }
         #endregion
     }
