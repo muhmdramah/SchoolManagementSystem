@@ -8,7 +8,8 @@ using SchoolManagementSystem.Service.Interfaces;
 namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
 {
     public class StudentsCommandHandler : ResponseHandler,
-        IRequestHandler<CreateStudentCommand, Response<string>>
+        IRequestHandler<CreateStudentCommand, Response<string>>,
+        IRequestHandler<UpdateStudentCommand, Response<string>>
     {
         #region Fields
         private readonly IStudentService _studentService;
@@ -34,6 +35,18 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
                 return UnprocessableEntity<string>("Failed to create the student.");
 
             else if (response == "created")
+                return Created<string>("Student created successfully!");
+            else
+                return BadRequest<string>("Failed to create the student.");
+        }
+
+        public async Task<Response<string>> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
+        {
+            var student = _mapper.Map<Student>(request);
+
+            var response = await _studentService.UpdateStudentAsync(student);
+
+            if (response == "updated")
                 return Created<string>("Student created successfully!");
             else
                 return BadRequest<string>("Failed to create the student.");
