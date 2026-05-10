@@ -79,7 +79,9 @@ namespace SchoolManagementSystem.Service.Implementations
 
             await _genericRepository.DeleteAsync(student);
         }
+        #endregion
 
+        #region Helpers 
         public async Task<bool> IsThisStudentExistAsync(string studentName)
         {
             var studentExists = _genericRepository
