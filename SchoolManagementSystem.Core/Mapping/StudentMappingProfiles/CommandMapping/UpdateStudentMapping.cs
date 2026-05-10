@@ -1,10 +1,13 @@
-﻿namespace SchoolManagementSystem.Core.Mapping.StudentMappingProfiles
+﻿using SchoolManagementSystem.Core.Features.Students.Commands.Models;
+using SchoolManagementSystem.Data.Entities;
+
+namespace SchoolManagementSystem.Core.Mapping.StudentMappingProfiles
 {
     public partial class StudentProfile
     {
         public void UpdateStudentMapping()
         {
-            //CreateMap<UpdateStudentC  ommand, Student>();
+            CreateMap<UpdateStudentCommand, Student>();
         }
     }
 }

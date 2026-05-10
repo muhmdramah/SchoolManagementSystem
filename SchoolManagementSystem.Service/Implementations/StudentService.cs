@@ -96,7 +96,7 @@ namespace SchoolManagementSystem.Service.Implementations
             if (studentId.HasValue)
             {
                 // logic with id
-                var studentExists = _genericRepository
+                var studentExists = await _genericRepository
                     .GetTableNoTracking()
                     .FirstOrDefaultAsync(s =>
                         s.StudentName.Equals(studentName) & !s.StudentId.Equals(studentId));
@@ -108,7 +108,7 @@ namespace SchoolManagementSystem.Service.Implementations
             }
             else
             {
-                var studentExists = _genericRepository
+                var studentExists = await _genericRepository
                     .GetTableNoTracking()
                     .FirstOrDefaultAsync(s => s.StudentName.Equals(studentName));
 
