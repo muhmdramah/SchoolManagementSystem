@@ -39,14 +39,19 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
 
         public async Task<Response<string>> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
         {
+            var currentStudent = await _studentService.GetStudentByIdAsync(request.StudentId);
+
+            if (currentStudent is null)
+                return NotFound<string>("Student not found.");
+
             var student = _mapper.Map<Student>(request);
 
             var response = await _studentService.UpdateStudentAsync(student);
 
             if (response == "updated")
-                return Created<string>("Student created successfully!");
+                return Created<string>($"Student with id: {request.StudentId} was updated successfully!");
             else
-                return BadRequest<string>("Failed to create the student.");
+                return BadRequest<string>("Failed to update the student.");
         }
         #endregion
     }

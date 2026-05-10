@@ -29,7 +29,7 @@ namespace SchoolManagementSystem.Core.Behaviors
                 {
                     var message = failures.Select(x => x.PropertyName + ": " + x.ErrorMessage).FirstOrDefault();
 
-                    throw new ValidationException(message);
+                    return (TResponse)Activator.CreateInstance(typeof(TResponse), message)!;
 
                 }
             }
