@@ -51,6 +51,28 @@ namespace SchoolManagementSystem.Service.Implementations
             return students;
         }
 
+        public async Task<ICollection<Student>> GetStudentsPagedAsync(int pageNumber, int pageSize)
+        {
+            if (_memoryCache.TryGetValue(StudentsCacheKey, out ICollection<Student>? cachedStudents))
+            {
+                _logger.LogInformation("Students retrieved from cache.");
+                return cachedStudents!;
+            }
+
+            _logger.LogInformation("Students retrieved from database.");
+
+            var students = await _genericRepository
+                .GetAllPagedAsync(pageNumber, pageSize, new Expression<Func<Student, object>>[] { s => s.Department });
+
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(30))
+                .SetSize(1);
+
+            _memoryCache.Set(StudentsCacheKey, students, cacheOptions);
+
+            return students;
+        }
+
         public async Task<Student> GetStudentByIdAsync(int id)
         {
             var student = await _genericRepository.GetTableNoTracking()

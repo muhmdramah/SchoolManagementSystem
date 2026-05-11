@@ -38,6 +38,28 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
             return result;
         }
 
+        public async Task<ICollection<T>> GetAllPagedAsync(int pageNumber, int pageSize, params Expression<Func<T, object>>[]? includeProperties)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            // Ensure we don't skip negative amounts
+            int skipAmount = (pageNumber - 1) * pageSize;
+
+            var result = await query
+                .Skip(skipAmount)
+                .ToListAsync();
+
+            return result;
+        }
+
         public virtual async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[]? includeProperties)
         {
             IQueryable<T> query = _dbSet;
