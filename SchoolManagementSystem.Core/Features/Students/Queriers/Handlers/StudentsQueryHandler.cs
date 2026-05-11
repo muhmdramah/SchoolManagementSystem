@@ -60,9 +60,12 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
                 student => new GetAllStudentsPagedResponse(student.StudentId, student.StudentName,
                                 student.StudentAddress, student.StudentPhone, student.Department.DepartmentName);
 
-            var queryable = _studentService.GetStudentsPagedQueryable();
+            //var studentsQueryable = _studentService.GetStudentsPagedQueryable();
 
-            var paginatedList = await queryable
+            var filteredstudentsQueryable = _studentService
+                .FilterPagedStudentsQueryable(request.OrderBy, request.Search);
+
+            var paginatedList = await filteredstudentsQueryable
                 .Select(expression)
                 .ToPaginatedListAsync(request.PageNumber, request.PageSize);
 

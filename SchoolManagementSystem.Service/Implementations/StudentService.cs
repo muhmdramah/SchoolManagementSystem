@@ -144,6 +144,41 @@ namespace SchoolManagementSystem.Service.Implementations
                 return true;
             }
         }
+
+        public IQueryable<Student> FilterPagedStudentsQueryable(string[]? orderBy, string? search)
+        {
+            var students = _genericRepository.GetTableNoTracking()
+                               .Include(s => s.Department)
+                               .AsQueryable();
+
+            if (search != null)
+            {
+                students = students.Where(x =>
+                    EF.Functions.Like(x.StudentName, $"%{search}%") ||
+                    EF.Functions.Like(x.StudentAddress, $"%{search}%") ||
+                    EF.Functions.Like(x.StudentPhone, $"%{search}%") ||
+                    EF.Functions.Like(x.Department.DepartmentName, $"%{search}%"));
+            }
+
+            //if (orderBy != null)
+            //{
+            //    foreach (var order in orderBy)
+            //    {
+            //        if (order.EndsWith(" desc", StringComparison.OrdinalIgnoreCase))
+            //        {
+            //            var propertyName = order.Substring(0, order.Length - 5).Trim();
+            //            students = students.OrderByDescending(e => EF.Property<object>(e, propertyName));
+            //        }
+            //        else
+            //        {
+            //            var propertyName = order.Trim();
+            //            students = students.OrderBy(e => EF.Property<object>(e, propertyName));
+            //        }
+            //    }
+            //}
+
+            return students;
+        }
         #endregion
     }
 }
