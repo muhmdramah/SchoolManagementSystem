@@ -10,9 +10,10 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
 
         public DeleteStudentValidator(IStudentService studentService)
         {
+            _studentService = studentService;
+
             ApplyValidationRules();
             CustomValidations();
-            _studentService = studentService;
         }
 
         private void ApplyValidationRules()
@@ -23,6 +24,12 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
 
         private void CustomValidations()
         {
+            RuleFor(x => x.StudentId)
+                .MustAsync(async (studentId, cancellation) =>
+                {
+                    var student = await _studentService.GetStudentByIdAsync(studentId);
+                    return student != null;
+                }).WithMessage("الطالب غير موجود!");
         }
     }
 }

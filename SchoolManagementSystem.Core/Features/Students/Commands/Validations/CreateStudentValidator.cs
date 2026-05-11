@@ -10,9 +10,10 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
 
         public CreateStudentValidator(IStudentService studentService)
         {
+            _studentService = studentService;
+
             ApplyValidationRules();
             CustomValidations();
-            _studentService = studentService;
         }
 
         private void ApplyValidationRules()
