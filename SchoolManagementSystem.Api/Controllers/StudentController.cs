@@ -13,6 +13,9 @@ namespace SchoolManagementSystem.Api.Controllers
     [ApiController]
     public class StudentController : ApplicationControllerBase
     {
+        private const string _globalRateLimiter = "GlobalRateLimiter";
+        private const string _singleStudentCacheInvalidator = "single-student";
+
         public StudentController(IMediator mediator,
             IOutputCacheStore outputCacheStore) : base(mediator, outputCacheStore)
         {
@@ -20,7 +23,7 @@ namespace SchoolManagementSystem.Api.Controllers
 
         [HttpGet(Router.StudentRouting.GetAllStudents)]
         [OutputCache(Duration = 120)]
-        [EnableRateLimiting("GlobalRateLimiter")]
+        [EnableRateLimiting(_globalRateLimiter)]
         public async Task<IActionResult> GetStudents()
         {
             var response = await _mediator.Send(new GetAllStudentsQuery());
@@ -34,7 +37,7 @@ namespace SchoolManagementSystem.Api.Controllers
         [HttpGet(Router.StudentRouting.GetStudentById)]
         [OutputCache(PolicyName = "CacheSingleStudentResponse")]
         //[OutputCache(Duration = 120, VaryByRouteValueNames = new[] { "id" })]
-        [EnableRateLimiting("GlobalRateLimiter")]
+        [EnableRateLimiting(_globalRateLimiter)]
         public async Task<IActionResult> GetStudent(int id)
         {
             var response = await _mediator.Send(new GetStudentByIdQuery(id));
@@ -46,37 +49,37 @@ namespace SchoolManagementSystem.Api.Controllers
         }
 
         [HttpPost(Router.StudentRouting.Create)]
-        [EnableRateLimiting("GlobalRateLimiter")]
+        [EnableRateLimiting(_globalRateLimiter)]
         public async Task<IActionResult> CreateStudent([FromBody] CreateStudentCommand command)
         {
             var response = await _mediator.Send(command);
 
             // Invalidate the cache for the deleted student
-            await _outputCacheStore.EvictByTagAsync("single-student", default);
+            await _outputCacheStore.EvictByTagAsync(_singleStudentCacheInvalidator, default);
 
             return NewResult(response);
         }
 
         [HttpPut(Router.StudentRouting.Update)]
-        [EnableRateLimiting("GlobalRateLimiter")]
+        [EnableRateLimiting(_globalRateLimiter)]
         public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentCommand command)
         {
             var response = await _mediator.Send(command);
 
             // Invalidate the cache for the deleted student
-            await _outputCacheStore.EvictByTagAsync("single-student", default);
+            await _outputCacheStore.EvictByTagAsync(_singleStudentCacheInvalidator, default);
 
             return NewResult(response);
         }
 
         [HttpDelete(Router.StudentRouting.Delete)]
-        [EnableRateLimiting("GlobalRateLimiter")]
+        [EnableRateLimiting(_globalRateLimiter)]
         public async Task<IActionResult> DeleteStudent([FromBody] DeleteStudentCommand command)
         {
             var response = await _mediator.Send(command);
 
             // Invalidate the cache for the deleted student
-            await _outputCacheStore.EvictByTagAsync("single-student", default);
+            await _outputCacheStore.EvictByTagAsync(_singleStudentCacheInvalidator, default);
 
             return NewResult(response);
         }
