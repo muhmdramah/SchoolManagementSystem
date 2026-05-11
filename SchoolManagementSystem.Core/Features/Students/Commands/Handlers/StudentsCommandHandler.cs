@@ -57,7 +57,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
 
         public async Task<Response<string>> Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
         {
-            var currentStudent = await _studentService.GetStudentByIdAsync(request.StudentId);
+            var currentStudent = await _studentService.GetStudentByIdWithoutIncludeDepartmentAsync(request.StudentId);
 
             if (currentStudent is null)
                 return NotFound<string>("Student not found.");
