@@ -7,15 +7,6 @@
         {
 
         }
-        public Response<T> Deleted<T>()
-        {
-            return new Response<T>()
-            {
-                StatusCode = System.Net.HttpStatusCode.OK,
-                Succeeded = true,
-                Message = "Deleted Successfully"
-            };
-        }
         public Response<T> Success<T>(T entity, object Meta = null)
         {
             return new Response<T>()
@@ -64,6 +55,18 @@
                 StatusCode = System.Net.HttpStatusCode.Created,
                 Succeeded = true,
                 Message = "Created",
+                Meta = Meta
+            };
+        }
+
+        public Response<T> Deleted<T>(T entity, object Meta = null)
+        {
+            return new Response<T>()
+            {
+                Data = entity,
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Succeeded = true,
+                Message = "Deleted Successfully",
                 Meta = Meta
             };
         }

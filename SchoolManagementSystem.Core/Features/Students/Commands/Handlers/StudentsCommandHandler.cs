@@ -67,7 +67,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
             var response = await _studentService.DeleteStudentAsync(student);
 
             if (response == "deleted")
-                return Created<string>($"Student with id: {request.StudentId} was deleted successfully!");
+                return Deleted<string>($"Student with id: {request.StudentId} was deleted successfully!");
             else
                 return BadRequest<string>("Failed to delete the student.");
         }

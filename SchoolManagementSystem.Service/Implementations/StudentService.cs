@@ -84,11 +84,23 @@ namespace SchoolManagementSystem.Service.Implementations
 
         public async Task<string> DeleteStudentAsync(Student student)
         {
-            _memoryCache.Remove(StudentsCacheKey);
+            var transactios = _genericRepository.BeginTransaction();
 
-            await _genericRepository.DeleteAsync(student);
+            try
+            {
+                _memoryCache.Remove(StudentsCacheKey);
 
-            return "deleted";
+                await _genericRepository.DeleteAsync(student);
+
+                await transactios.CommitAsync();
+
+                return "deleted";
+            }
+            catch (Exception)
+            {
+                await transactios.RollbackAsync();
+                return "something went wrong!";
+            }
         }
         #endregion
 
