@@ -34,6 +34,19 @@ namespace SchoolManagementSystem.Api.Controllers
             return NewResult(response);
         }
 
+        [HttpGet(Router.StudentRouting.GetAllStudentsPaged)]
+        [OutputCache(Duration = 120)]
+        [EnableRateLimiting(_globalRateLimiter)]
+        public async Task<IActionResult> GetStudents([FromQuery] GetAllStudentsPagedQuery query)
+        {
+            var response = await _mediator.Send(query);
+
+            if (response == null || !response.Data.Any())
+                return NotFound("No students found!");
+
+            return Ok(response);
+        }
+
         [HttpGet(Router.StudentRouting.GetStudentById)]
         [OutputCache(PolicyName = "CacheSingleStudentResponse")]
         //[OutputCache(Duration = 120, VaryByRouteValueNames = new[] { "id" })]

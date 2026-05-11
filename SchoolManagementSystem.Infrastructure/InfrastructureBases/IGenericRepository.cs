@@ -7,7 +7,6 @@ namespace SchoolManagementSystem.Infrastructure.InfrastructureBases
     {
         #region Queries 
         Task<ICollection<T>> GetAllAsync(params Expression<Func<T, object>>[]? includeProperties);
-        Task<ICollection<T>> GetAllPagedAsync(int pageNumber, int pageSize, params Expression<Func<T, object>>[]? includeProperties);
         Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[]? includeProperties);
         IQueryable<T> GetTableNoTracking();
         IQueryable<T> GetTableAsTracking();

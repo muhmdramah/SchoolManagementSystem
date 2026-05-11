@@ -3,13 +3,18 @@ using MediatR;
 using SchoolManagementSystem.Core.Bases;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Models;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Responses;
+using SchoolManagementSystem.Core.Wrappers;
+using SchoolManagementSystem.Data.Entities;
 using SchoolManagementSystem.Service.Interfaces;
+using System.Linq.Expressions;
 
 namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
 {
     public class StudentsQueryHandler : ResponseHandler,
         IRequestHandler<GetAllStudentsQuery, Response<ICollection<GetAllStudentsResponse>>>,
-        IRequestHandler<GetStudentByIdQuery, Response<GetStudentByIdResponse>>
+        IRequestHandler<GetStudentByIdQuery, Response<GetStudentByIdResponse>>,
+        IRequestHandler<GetAllStudentsPagedQuery, PaginatedResult<GetAllStudentsPagedResponse>>
+
     {
         #region Fields
         private readonly IStudentService _studentService;
@@ -47,6 +52,21 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
             var response = _mapper.Map<GetStudentByIdResponse>(student);
 
             return Success(response);
+        }
+
+        public async Task<PaginatedResult<GetAllStudentsPagedResponse>> Handle(GetAllStudentsPagedQuery request, CancellationToken cancellationToken)
+        {
+            Expression<Func<Student, GetAllStudentsPagedResponse>> expression =
+                student => new GetAllStudentsPagedResponse(student.StudentId, student.StudentName,
+                                student.StudentAddress, student.StudentPhone, student.Department.DepartmentName);
+
+            var queryable = _studentService.GetStudentsPagedQueryable();
+
+            var paginatedList = await queryable
+                .Select(expression)
+                .ToPaginatedListAsync(request.PageNumber, request.PageSize);
+
+            return paginatedList;
         }
         #endregion
     }

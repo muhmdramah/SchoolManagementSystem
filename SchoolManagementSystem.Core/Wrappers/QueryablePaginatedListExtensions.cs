@@ -2,7 +2,7 @@
 
 namespace SchoolManagementSystem.Core.Wrappers
 {
-    public static class QueryableExtensions
+    public static class QueryablePaginatedListExtensions
     {
         public static async Task<PaginatedResult<T>> ToPaginatedListAsync<T>(this IQueryable<T> source, int pageNumber, int pageSize)
             where T : class

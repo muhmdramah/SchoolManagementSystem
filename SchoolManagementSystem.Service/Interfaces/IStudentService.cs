@@ -5,7 +5,7 @@ namespace SchoolManagementSystem.Service.Interfaces
     public interface IStudentService
     {
         public Task<ICollection<Student>> GetStudentsAsync();
-        public Task<ICollection<Student>> GetStudentsPagedAsync(int pageNumber, int pageSize);
+        public IQueryable<Student> GetStudentsPagedQueryable();
         public Task<Student> GetStudentByIdAsync(int id);
         public Task<Student> GetStudentByIdWithoutIncludeDepartmentAsync(int id);
         public Task<string> AddStudentAsync(Student student);
