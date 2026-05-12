@@ -12,18 +12,19 @@ namespace SchoolManagementSystem.Service.Implementations
     public class StudentService : IStudentService
     {
         #region Fields
-        private readonly IGenericRepository<Student> _genericRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        //private readonly IGenericRepository<Student> _genericRepository;
         private readonly IMemoryCache _memoryCache;
         private readonly ILogger<StudentService> _logger;
         private const string StudentsCacheKey = "students";
         #endregion
 
         #region Constructors
-        public StudentService(IGenericRepository<Student> genericRepository,
+        public StudentService(IUnitOfWork unitOfWork,
             IMemoryCache memoryCache,
             ILogger<StudentService> logger)
         {
-            _genericRepository = genericRepository;
+            _unitOfWork = unitOfWork;
             _memoryCache = memoryCache;
             _logger = logger;
         }
@@ -40,7 +41,7 @@ namespace SchoolManagementSystem.Service.Implementations
 
             _logger.LogInformation("Students retrieved from database.");
 
-            var students = await _genericRepository
+            var students = await _unitOfWork.StudentRepository
                 .GetAllAsync(new Expression<Func<Student, object>>[] { s => s.Department });
 
             var cacheOptions = new MemoryCacheEntryOptions()
@@ -54,7 +55,7 @@ namespace SchoolManagementSystem.Service.Implementations
 
         public IQueryable<Student> GetStudentsPagedQueryable()
         {
-            var students = _genericRepository.GetTableNoTracking()
+            var students = _unitOfWork.StudentRepository.GetTableNoTracking()
                                            .Include(s => s.Department)
                                            .AsQueryable();
             return students;
@@ -62,7 +63,7 @@ namespace SchoolManagementSystem.Service.Implementations
 
         public async Task<Student> GetStudentByIdAsync(int id)
         {
-            var student = await _genericRepository.GetTableNoTracking()
+            var student = await _unitOfWork.StudentRepository.GetTableNoTracking()
                                            .Include(s => s.Department)
                                            .FirstOrDefaultAsync(s => s.StudentId == id);
             return student!;
@@ -70,7 +71,7 @@ namespace SchoolManagementSystem.Service.Implementations
 
         public async Task<Student> GetStudentByIdWithoutIncludeDepartmentAsync(int id)
         {
-            var student = await _genericRepository.GetTableNoTracking()
+            var student = await _unitOfWork.StudentRepository.GetTableNoTracking()
                                            .FirstOrDefaultAsync(s => s.StudentId == id);
             return student!;
         }
@@ -81,7 +82,7 @@ namespace SchoolManagementSystem.Service.Implementations
         {
             _memoryCache.Remove(StudentsCacheKey);
 
-            await _genericRepository.AddAsync(student);
+            await _unitOfWork.StudentRepository.AddAsync(student);
 
             return "created";
         }
@@ -90,20 +91,20 @@ namespace SchoolManagementSystem.Service.Implementations
         {
             _memoryCache.Remove(StudentsCacheKey);
 
-            await _genericRepository.UpdateAsync(student);
+            await _unitOfWork.StudentRepository.UpdateAsync(student);
 
             return "updated";
         }
 
         public async Task<string> DeleteStudentAsync(Student student)
         {
-            var transactios = _genericRepository.BeginTransaction();
+            var transactios = _unitOfWork.StudentRepository.BeginTransaction();
 
             try
             {
                 _memoryCache.Remove(StudentsCacheKey);
 
-                await _genericRepository.DeleteAsync(student);
+                await _unitOfWork.StudentRepository.DeleteAsync(student);
 
                 await transactios.CommitAsync();
 
@@ -123,7 +124,7 @@ namespace SchoolManagementSystem.Service.Implementations
             if (studentId.HasValue)
             {
                 // logic with id
-                var studentExists = await _genericRepository
+                var studentExists = await _unitOfWork.StudentRepository
                     .GetTableNoTracking()
                     .FirstOrDefaultAsync(s =>
                         s.StudentName.Equals(studentName) & !s.StudentId.Equals(studentId));
@@ -135,7 +136,7 @@ namespace SchoolManagementSystem.Service.Implementations
             }
             else
             {
-                var studentExists = await _genericRepository
+                var studentExists = await _unitOfWork.StudentRepository
                     .GetTableNoTracking()
                     .FirstOrDefaultAsync(s => s.StudentName.Equals(studentName));
 
@@ -148,7 +149,7 @@ namespace SchoolManagementSystem.Service.Implementations
 
         public IQueryable<Student> FilterPagedStudentsQueryable(StudentOrderingEnum? orderBy, string? search)
         {
-            var students = _genericRepository.GetTableNoTracking()
+            var students = _unitOfWork.StudentRepository.GetTableNoTracking()
                                .Include(s => s.Department)
                                .AsQueryable();
 
