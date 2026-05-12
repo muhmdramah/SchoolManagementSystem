@@ -8,5 +8,6 @@
         public const string Created = "Created";
         public const string OK = "OK";
         public const string Unauthorized = "Unauthorized";
+        public const string BadRequest = "BadRequest";
     }
 }

@@ -18,7 +18,7 @@ namespace SchoolManagementSystem.Core.Bases
                 Data = entity,
                 StatusCode = System.Net.HttpStatusCode.OK,
                 Succeeded = true,
-                Message = _stringLocalizer["OK"],
+                Message = _stringLocalizer[SharedResourcesKeys.OK],
                 Meta = Meta
             };
         }
@@ -28,7 +28,7 @@ namespace SchoolManagementSystem.Core.Bases
             {
                 StatusCode = System.Net.HttpStatusCode.Unauthorized,
                 Succeeded = true,
-                Message = _stringLocalizer["Unauthorized"]
+                Message = _stringLocalizer[SharedResourcesKeys.Unauthorized]
             };
         }
         public Response<T> BadRequest<T>(string Message = null)
@@ -37,7 +37,7 @@ namespace SchoolManagementSystem.Core.Bases
             {
                 StatusCode = System.Net.HttpStatusCode.BadRequest,
                 Succeeded = false,
-                Message = Message == null ? _stringLocalizer["BadRequest"] : Message
+                Message = Message == null ? _stringLocalizer[SharedResourcesKeys.BadRequest] : Message
             };
         }
 
@@ -47,7 +47,7 @@ namespace SchoolManagementSystem.Core.Bases
             {
                 StatusCode = System.Net.HttpStatusCode.NotFound,
                 Succeeded = false,
-                Message = message == null ? _stringLocalizer["NotFound"] : message
+                Message = message == null ? _stringLocalizer[SharedResourcesKeys.NotFound] : message
             };
         }
 
@@ -58,7 +58,7 @@ namespace SchoolManagementSystem.Core.Bases
                 Data = entity,
                 StatusCode = System.Net.HttpStatusCode.Created,
                 Succeeded = true,
-                Message = _stringLocalizer["Created"],
+                Message = _stringLocalizer[SharedResourcesKeys.Created],
                 Meta = Meta
             };
         }
@@ -70,7 +70,7 @@ namespace SchoolManagementSystem.Core.Bases
                 Data = entity,
                 StatusCode = System.Net.HttpStatusCode.OK,
                 Succeeded = true,
-                Message = _stringLocalizer["Deleted"],
+                Message = _stringLocalizer[SharedResourcesKeys.Deleted],
                 Meta = Meta
             };
         }
