@@ -27,7 +27,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
 
         #region Constructors
         public StudentsQueryHandler(IStudentService studentService, IMapper mapper,
-            IStringLocalizer<SharedResources> stringLocalizer)
+            IStringLocalizer<SharedResources> stringLocalizer) : base(stringLocalizer)
         {
             _studentService = studentService;
             _mapper = mapper;

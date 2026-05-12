@@ -1,11 +1,15 @@
-﻿namespace SchoolManagementSystem.Core.Bases
+﻿using Microsoft.Extensions.Localization;
+using SchoolManagementSystem.Core.LocalizationResources;
+
+namespace SchoolManagementSystem.Core.Bases
 {
     public class ResponseHandler
     {
+        private readonly IStringLocalizer<SharedResources> _stringLocalizer;
 
-        public ResponseHandler()
+        public ResponseHandler(IStringLocalizer<SharedResources> stringLocalizer)
         {
-
+            _stringLocalizer = stringLocalizer;
         }
         public Response<T> Success<T>(T entity, object Meta = null)
         {
@@ -14,7 +18,7 @@
                 Data = entity,
                 StatusCode = System.Net.HttpStatusCode.OK,
                 Succeeded = true,
-                Message = "Retrieved Successfully",
+                Message = _stringLocalizer["OK"],
                 Meta = Meta
             };
         }
@@ -24,7 +28,7 @@
             {
                 StatusCode = System.Net.HttpStatusCode.Unauthorized,
                 Succeeded = true,
-                Message = "UnAuthorized"
+                Message = _stringLocalizer["Unauthorized"]
             };
         }
         public Response<T> BadRequest<T>(string Message = null)
@@ -33,7 +37,7 @@
             {
                 StatusCode = System.Net.HttpStatusCode.BadRequest,
                 Succeeded = false,
-                Message = Message == null ? "Bad Request" : Message
+                Message = Message == null ? _stringLocalizer["BadRequest"] : Message
             };
         }
 
@@ -43,7 +47,7 @@
             {
                 StatusCode = System.Net.HttpStatusCode.NotFound,
                 Succeeded = false,
-                Message = message == null ? "Not Found" : message
+                Message = message == null ? _stringLocalizer["NotFound"] : message
             };
         }
 
@@ -54,7 +58,7 @@
                 Data = entity,
                 StatusCode = System.Net.HttpStatusCode.Created,
                 Succeeded = true,
-                Message = "Created",
+                Message = _stringLocalizer["Created"],
                 Meta = Meta
             };
         }
@@ -66,7 +70,7 @@
                 Data = entity,
                 StatusCode = System.Net.HttpStatusCode.OK,
                 Succeeded = true,
-                Message = "Deleted Successfully",
+                Message = _stringLocalizer["Deleted"],
                 Meta = Meta
             };
         }
