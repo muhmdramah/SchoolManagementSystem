@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using SchoolManagementSystem.Data.Entities;
+using SchoolManagementSystem.Data.Helpers;
 using SchoolManagementSystem.Infrastructure.InfrastructureBases;
 using SchoolManagementSystem.Service.Interfaces;
 using System.Linq.Expressions;
@@ -145,7 +146,7 @@ namespace SchoolManagementSystem.Service.Implementations
             }
         }
 
-        public IQueryable<Student> FilterPagedStudentsQueryable(string[]? orderBy, string? search)
+        public IQueryable<Student> FilterPagedStudentsQueryable(StudentOrderingEnum? orderBy, string? search)
         {
             var students = _genericRepository.GetTableNoTracking()
                                .Include(s => s.Department)
@@ -160,22 +161,24 @@ namespace SchoolManagementSystem.Service.Implementations
                     EF.Functions.Like(x.Department.DepartmentName, $"%{search}%"));
             }
 
-            //if (orderBy != null)
-            //{
-            //    foreach (var order in orderBy)
-            //    {
-            //        if (order.EndsWith(" desc", StringComparison.OrdinalIgnoreCase))
-            //        {
-            //            var propertyName = order.Substring(0, order.Length - 5).Trim();
-            //            students = students.OrderByDescending(e => EF.Property<object>(e, propertyName));
-            //        }
-            //        else
-            //        {
-            //            var propertyName = order.Trim();
-            //            students = students.OrderBy(e => EF.Property<object>(e, propertyName));
-            //        }
-            //    }
-            //}
+            switch (orderBy)
+            {
+                case StudentOrderingEnum.StduentId:
+                    students = students.OrderBy(s => s.StudentId);
+                    break;
+                case StudentOrderingEnum.StudentName:
+                    students = students.OrderBy(s => s.StudentName);
+                    break;
+                case StudentOrderingEnum.StudentAddress:
+                    students = students.OrderBy(s => s.StudentAddress);
+                    break;
+                case StudentOrderingEnum.StudentPhone:
+                    students = students.OrderBy(s => s.StudentPhone);
+                    break;
+
+                default:
+                    break;
+            }
 
             return students;
         }

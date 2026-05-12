@@ -1,4 +1,5 @@
 ﻿using SchoolManagementSystem.Data.Entities;
+using SchoolManagementSystem.Data.Helpers;
 
 namespace SchoolManagementSystem.Service.Interfaces
 {
@@ -12,6 +13,6 @@ namespace SchoolManagementSystem.Service.Interfaces
         public Task<string> DeleteStudentAsync(Student student);
         public Task<string> UpdateStudentAsync(Student student);
         Task<bool> IsThisStudentExistAsync(string studentName, int? studentId = null);
-        IQueryable<Student> FilterPagedStudentsQueryable(string[]? orderBy, string? search);
+        IQueryable<Student> FilterPagedStudentsQueryable(StudentOrderingEnum? orderBy, string? search);
     }
 }
