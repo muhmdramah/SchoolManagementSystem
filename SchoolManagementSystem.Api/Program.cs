@@ -103,7 +103,7 @@ builder.Services.AddMemoryCache(options =>
 #region Localization
 builder.Services.AddLocalization(opt =>
 {
-    opt.ResourcesPath = "Resources";
+    opt.ResourcesPath = "";
 });
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>

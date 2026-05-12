@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Localization;
 using SchoolManagementSystem.Core.Bases;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Models;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Responses;
+using SchoolManagementSystem.Core.LocalizationResources;
 using SchoolManagementSystem.Core.Wrappers;
 using SchoolManagementSystem.Data.Entities;
 using SchoolManagementSystem.Service.Interfaces;
@@ -19,13 +21,17 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
         #region Fields
         private readonly IStudentService _studentService;
         private readonly IMapper _mapper;
+        private readonly IStringLocalizer<SharedResources> _stringLocalizer;
+
         #endregion
 
         #region Constructors
-        public StudentsQueryHandler(IStudentService studentService, IMapper mapper)
+        public StudentsQueryHandler(IStudentService studentService, IMapper mapper,
+            IStringLocalizer<SharedResources> stringLocalizer)
         {
             _studentService = studentService;
             _mapper = mapper;
+            _stringLocalizer = stringLocalizer;
         }
         #endregion
 
@@ -35,7 +41,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
             var students = await _studentService.GetStudentsAsync();
 
             if (students is null)
-                return NotFound<ICollection<GetAllStudentsResponse>>();
+                return NotFound<ICollection<GetAllStudentsResponse>>(_stringLocalizer[SharedResourcesKeys.NotFound]);
 
             var response = _mapper.Map<ICollection<GetAllStudentsResponse>>(students);
 
@@ -47,7 +53,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
             var student = await _studentService.GetStudentByIdAsync(request.Id);
 
             if (student is null)
-                return NotFound<GetStudentByIdResponse>();
+                return NotFound<GetStudentByIdResponse>(_stringLocalizer[SharedResourcesKeys.NotFound]);
 
             var response = _mapper.Map<GetStudentByIdResponse>(student);
 
