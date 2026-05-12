@@ -1,12 +1,15 @@
 #region Namespaces
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SchoolManagementSystem.Core;
 using SchoolManagementSystem.Core.Middlewares;
 using SchoolManagementSystem.Infrastructure;
 using SchoolManagementSystem.Infrastructure.Context;
 using SchoolManagementSystem.Service;
+using System.Globalization;
 using System.IO.Compression;
 #endregion
 
@@ -97,6 +100,26 @@ builder.Services.AddMemoryCache(options =>
 });
 #endregion
 
+#region Localization
+builder.Services.AddLocalization(opt =>
+{
+    opt.ResourcesPath = "Resources";
+});
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    List<CultureInfo> supportedCultures = new List<CultureInfo>
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("ar-EG"),
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("ar-EG");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+#endregion
+
 var app = builder.Build();
 
 #region Swagger and OpenApi
@@ -115,6 +138,12 @@ if (app.Environment.IsDevelopment())
 // Configure the HTTP request pipeline.
 
 #region Middlwares
+
+#region Localization Middlewares
+var options = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(options.Value);
+#endregion
+
 app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
