@@ -147,6 +147,9 @@
   <data name="StudentExistance" xml:space="preserve">
     <value>الطالب ده موجود بالفعل!</value>
   </data>
+  <data name="StudentIdGreaterThanZero" xml:space="preserve">
+    <value>رقم الطالب لازم يكون أكبر من صفر!</value>
+  </data>
   <data name="StudentNameExistance" xml:space="preserve">
     <value>اسم الطالب لازم يكون موجود!</value>
   </data>

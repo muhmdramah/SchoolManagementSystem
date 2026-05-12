@@ -147,6 +147,9 @@
   <data name="StudentExistance" xml:space="preserve">
     <value>This student is already exists!</value>
   </data>
+  <data name="StudentIdGreaterThanZero" xml:space="preserve">
+    <value>Student id must be greater than zero!</value>
+  </data>
   <data name="StudentNameExistance" xml:space="preserve">
     <value>Student name must be exist!</value>
   </data>

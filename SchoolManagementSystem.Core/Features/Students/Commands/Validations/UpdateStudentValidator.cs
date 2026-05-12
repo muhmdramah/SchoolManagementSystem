@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Localization;
 using SchoolManagementSystem.Core.Features.Students.Commands.Models;
+using SchoolManagementSystem.Core.LocalizationResources;
 using SchoolManagementSystem.Service.Interfaces;
 
 namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
@@ -7,10 +9,14 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
     public class UpdateStudentValidator : AbstractValidator<UpdateStudentCommand>
     {
         private readonly IStudentService _studentService;
+        private readonly IStringLocalizer<SharedResources> _stringLocalizer;
 
-        public UpdateStudentValidator(IStudentService studentService)
+
+        public UpdateStudentValidator(IStudentService studentService,
+            IStringLocalizer<SharedResources> stringLocalizer)
         {
             _studentService = studentService;
+            _stringLocalizer = stringLocalizer;
 
             ApplyValidationRules();
             CustomValidations();
@@ -19,25 +25,25 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
         private void ApplyValidationRules()
         {
             RuleFor(x => x.StudentId)
-                .NotEmpty().WithMessage("اسم الطالب لازم يكون موجود!")
-                .NotNull().WithMessage("اسم الطالب لازم يكون موجود!");
+                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.StudentNameExistance])
+                .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.StudentNameExistance]);
 
             RuleFor(x => x.StudentName)
-                .NotEmpty().WithMessage("اسم الطالب لازم يكون موجود!")
-                .NotNull().WithMessage("اسم الطالب لازم يكون موجود!")
-                .MaximumLength(50).WithMessage("اسم الطالب مينفعش يزيد عن 50 حرف!");
+                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.StudentNameExistance])
+                .NotNull().WithMessage(_stringLocalizer[SharedResourcesKeys.StudentNameExistance])
+                .MaximumLength(50).WithMessage(_stringLocalizer[SharedResourcesKeys.StudentNameLength]);
 
             RuleFor(x => x.StudentAddress)
-                .NotEmpty().WithMessage("عنوان الطالب لازم يكون موجود!")
-                .MaximumLength(100).WithMessage("عنوان الطالب مينفعش يزيد عن 100 حرف!");
+                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.StudentAddressExistance])
+                .MaximumLength(100).WithMessage(_stringLocalizer[SharedResourcesKeys.StudentAddressLength]);
 
             RuleFor(x => x.StudentPhone)
-                .NotEmpty().WithMessage("رقم هاتف الطالب لازم يكون موجود!")
-                .MaximumLength(16).WithMessage("رقم هاتف الطالب مينفعش يزيد عن 16 رقم!")
-                .Matches(@"^\+201\d{9}$").WithMessage("رقم هاتف الطالب لازم يكون رقم صحيح!");
+                .NotEmpty().WithMessage(_stringLocalizer[SharedResourcesKeys.StudentPhoneNumberExistance])
+                .MaximumLength(16).WithMessage(_stringLocalizer[SharedResourcesKeys.StudentPhoneNumberLength])
+                .Matches(@"^\+201\d{9}$").WithMessage(_stringLocalizer[SharedResourcesKeys.StudentPhoneNumberValidator]);
 
             RuleFor(x => x.DepartmentId)
-                .GreaterThan(0).WithMessage("رقم القسم لازم يكون أكبر من صفر!");
+                .GreaterThan(0).WithMessage(_stringLocalizer[SharedResourcesKeys.StudentDepartmentNumberMustBeGreaterThanZero]);
         }
 
         private void CustomValidations()
@@ -46,7 +52,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
                 .MustAsync(async (model, studentName, cancellation) =>
                 {
                     return !await _studentService.IsThisStudentExistAsync(studentName, model.StudentId);
-                }).WithMessage("الطالب ده موجود بالفعل!");
+                }).WithMessage(_stringLocalizer[SharedResourcesKeys.StudentExistance]);
         }
     }
 }

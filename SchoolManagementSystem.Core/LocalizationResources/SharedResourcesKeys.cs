@@ -20,6 +20,7 @@
         public const string StudentPhoneNumberLength = "StudentPhoneNumberLength";
         public const string StudentPhoneNumberValidator = "StudentPhoneNumberValidator";
         public const string StudentDepartmentNumberMustBeGreaterThanZero = "StudentDepartmentNumberMustBeGreaterThanZero";
+        public const string StudentIdGreaterThanZero = "StudentIdGreaterThanZero";
 
         #endregion
     }
