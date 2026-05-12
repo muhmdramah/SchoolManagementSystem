@@ -135,6 +135,33 @@
   <data name="Required" xml:space="preserve">
     <value>This field is required!</value>
   </data>
+  <data name="StudentAddressExistance" xml:space="preserve">
+    <value>Student address must be exist!</value>
+  </data>
+  <data name="StudentAddressLength" xml:space="preserve">
+    <value>Student address must be less than 100 characters!</value>
+  </data>
+  <data name="StudentDepartmentNumberMustBeGreaterThanZero" xml:space="preserve">
+    <value>Student department number must be greater than 0!</value>
+  </data>
+  <data name="StudentExistance" xml:space="preserve">
+    <value>This student is already exists!</value>
+  </data>
+  <data name="StudentNameExistance" xml:space="preserve">
+    <value>Student name must be exist!</value>
+  </data>
+  <data name="StudentNameLength" xml:space="preserve">
+    <value>Student name must be less than 50 letters!</value>
+  </data>
+  <data name="StudentPhoneNumberExistance" xml:space="preserve">
+    <value>Student phone number must be exist!</value>
+  </data>
+  <data name="StudentPhoneNumberLength" xml:space="preserve">
+    <value>Student phone number must be less than 16 characters</value>
+  </data>
+  <data name="StudentPhoneNumberValidator" xml:space="preserve">
+    <value>Student phone number must be valid</value>
+  </data>
   <data name="Unauthorized" xml:space="preserve">
     <value>This user is Unauthorized</value>
   </data>

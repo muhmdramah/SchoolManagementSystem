@@ -135,6 +135,33 @@
   <data name="Required" xml:space="preserve">
     <value>الحقل دا مطلوب!</value>
   </data>
+  <data name="StudentAddressExistance" xml:space="preserve">
+    <value>عنوان الطالب لازم يكون موجود!</value>
+  </data>
+  <data name="StudentAddressLength" xml:space="preserve">
+    <value>عنوان الطالب مينفعش يزيد عن 100 حرف!</value>
+  </data>
+  <data name="StudentDepartmentNumberMustBeGreaterThanZero" xml:space="preserve">
+    <value>رقم القسم لازم يكون أكبر من صفر!</value>
+  </data>
+  <data name="StudentExistance" xml:space="preserve">
+    <value>الطالب ده موجود بالفعل!</value>
+  </data>
+  <data name="StudentNameExistance" xml:space="preserve">
+    <value>اسم الطالب لازم يكون موجود!</value>
+  </data>
+  <data name="StudentNameLength" xml:space="preserve">
+    <value>اسم الطالب مينفعش يزيد عن 50 حرف!</value>
+  </data>
+  <data name="StudentPhoneNumberExistance" xml:space="preserve">
+    <value>رقم هاتف الطالب لازم يكون موجود!</value>
+  </data>
+  <data name="StudentPhoneNumberLength" xml:space="preserve">
+    <value>رقم هاتف الطالب مينفعش يزيد عن 16 رقم!</value>
+  </data>
+  <data name="StudentPhoneNumberValidator" xml:space="preserve">
+    <value>رقم هاتف الطالب لازم يكون رقم صحيح!</value>
+  </data>
   <data name="Unauthorized" xml:space="preserve">
     <value>معندكش الصلاحية تعمل كدا</value>
   </data>
