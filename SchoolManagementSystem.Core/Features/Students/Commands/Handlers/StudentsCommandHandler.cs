@@ -30,10 +30,10 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
         {
             var student = _mapper.Map<Student>(request);
 
-            var response = await _studentService.AddStudentAsync(student);
+            var response = await _studentService.CreateStudentAsync(student);
 
             if (response == "created")
-                return Created<string>("Student created successfully!");
+                return Created<string>($"Student with name *{request.StudentName}* created successfully!");
             else
                 return BadRequest<string>("Failed to create the student.");
         }

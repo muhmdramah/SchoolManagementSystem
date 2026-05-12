@@ -78,7 +78,7 @@ namespace SchoolManagementSystem.Service.Implementations
         #endregion
 
         #region Commands
-        public async Task<string> AddStudentAsync(Student student)
+        public async Task<string> CreateStudentAsync(Student student)
         {
             _memoryCache.Remove(StudentsCacheKey);
 

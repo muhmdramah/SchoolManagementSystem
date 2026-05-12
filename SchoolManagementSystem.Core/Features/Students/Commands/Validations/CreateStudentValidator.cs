@@ -30,7 +30,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Validations
             RuleFor(x => x.StudentPhone)
                 .NotEmpty().WithMessage("رقم هاتف الطالب لازم يكون موجود!")
                 .MaximumLength(16).WithMessage("رقم هاتف الطالب مينفعش يزيد عن 16 رقم!")
-                .Matches(@"^\+201\d{9}$").WithMessage("رقم هاتف الطالب لازم يكون رقم صحيح!");
+                .Matches(@"^(\+201|01)\d{9}$").WithMessage("رقم هاتف الطالب لازم يكون رقم صحيح!");
 
             RuleFor(x => x.DepartmentId)
                 .GreaterThan(0).WithMessage("رقم القسم لازم يكون أكبر من صفر!");
