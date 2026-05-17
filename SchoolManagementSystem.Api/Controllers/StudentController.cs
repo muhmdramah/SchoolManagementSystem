@@ -6,6 +6,7 @@ using SchoolManagementSystem.Api.Controllers.Common;
 using SchoolManagementSystem.Core.Features.Students.Commands.Models;
 using SchoolManagementSystem.Core.Features.Students.Queriers.Models;
 using SchoolManagementSystem.Data.ApplicationMetadata;
+using System.Text;
 
 namespace SchoolManagementSystem.Api.Controllers
 {
@@ -95,6 +96,31 @@ namespace SchoolManagementSystem.Api.Controllers
             await _outputCacheStore.EvictByTagAsync(_singleStudentCacheInvalidator, default);
 
             return NewResult(response);
+        }
+
+        [HttpGet("export-students-as-csv")]
+        public async Task<IActionResult> ExportStudentsAsCSV()
+        {
+            var response = await _mediator.Send(new GetAllStudentsQuery());
+
+            if (response == null || !response.Data.Any())
+                return NotFound("No students found!");
+
+            var csvBuilder = new StringBuilder();
+
+            // Header
+            csvBuilder.AppendLine("StudentId,StudentName,StudentAddress, StudentPhone,Department");
+
+            // Rows
+            foreach (var student in response.Data)
+            {
+                csvBuilder.AppendLine($"{student.StudentId},{student.StudentName}," +
+                    $"{student.StudentAddress},{student.StudentPhone},{student.DepartmentName}");
+            }
+
+            var bytes = Encoding.UTF8.GetBytes(csvBuilder.ToString());
+
+            return File(bytes, "text/csv", "students.csv");
         }
     }
 }

@@ -38,9 +38,9 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
             var response = await _studentService.CreateStudentAsync(student);
 
             if (response == "created")
-                return Created<string>($"Student with name *{request.StudentName}* created successfully!");
+                return Created<string>(_stringLocalizer[SharedResourcesKeys.Created]);
             else
-                return BadRequest<string>("Failed to create the student.");
+                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.BadRequest]);
         }
 
         public async Task<Response<string>> Handle(UpdateStudentCommand request, CancellationToken cancellationToken)
@@ -48,16 +48,16 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
             var currentStudent = await _studentService.GetStudentByIdAsync(request.StudentId);
 
             if (currentStudent is null)
-                return NotFound<string>("Student not found.");
+                return NotFound<string>(_stringLocalizer[SharedResourcesKeys.NotFound]);
 
             var student = _mapper.Map<Student>(request);
 
             var response = await _studentService.UpdateStudentAsync(student);
 
             if (response == "updated")
-                return Created<string>($"Student with id: {request.StudentId} was updated successfully!");
+                return Created<string>(_stringLocalizer[SharedResourcesKeys.Updated]);
             else
-                return BadRequest<string>("Failed to update the student.");
+                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.BadRequest]);
         }
 
         public async Task<Response<string>> Handle(DeleteStudentCommand request, CancellationToken cancellationToken)
@@ -65,16 +65,16 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
             var currentStudent = await _studentService.GetStudentByIdWithoutIncludeDepartmentAsync(request.StudentId);
 
             if (currentStudent is null)
-                return NotFound<string>("Student not found.");
+                return NotFound<string>(_stringLocalizer[SharedResourcesKeys.NotFound]);
 
             var student = _mapper.Map<Student>(request);
 
             var response = await _studentService.DeleteStudentAsync(student);
 
             if (response == "deleted")
-                return Deleted<string>($"Student with id: {request.StudentId} was deleted successfully!");
+                return Deleted<string>(_stringLocalizer[SharedResourcesKeys.Deleted]);
             else
-                return BadRequest<string>("Failed to delete the student.");
+                return BadRequest<string>(_stringLocalizer[SharedResourcesKeys.BadRequest]);
         }
         #endregion
     }
