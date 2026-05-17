@@ -109,7 +109,7 @@ namespace SchoolManagementSystem.Api.Controllers
             var csvBuilder = new StringBuilder();
 
             // Header
-            csvBuilder.AppendLine("StudentId,StudentName,StudentAddress, StudentPhone,Department");
+            csvBuilder.AppendLine("Student Id,Student Name,Student Address, Student Phone,Department");
 
             // Rows
             foreach (var student in response.Data)
