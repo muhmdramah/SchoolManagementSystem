@@ -43,9 +43,16 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
             if (students is null)
                 return NotFound<ICollection<GetAllStudentsResponse>>(_stringLocalizer[SharedResourcesKeys.NotFound]);
 
-            var response = _mapper.Map<ICollection<GetAllStudentsResponse>>(students);
+            var studentsCollection = _mapper.Map<ICollection<GetAllStudentsResponse>>(students);
 
-            return Success(response);
+            var response = Success(studentsCollection);
+
+            response.Meta = new
+            {
+                TotalCount = $"{studentsCollection.Count} students exist!"
+            };
+
+            return response;
         }
 
         public async Task<Response<GetStudentByIdResponse>> Handle(GetStudentByIdQuery request, CancellationToken cancellationToken)
@@ -66,14 +73,17 @@ namespace SchoolManagementSystem.Core.Features.Students.Queriers.Handlers
                 student => new GetAllStudentsPagedResponse(student.StudentId, student.StudentName,
                                 student.StudentAddress, student.StudentPhone, student.Department.DepartmentName);
 
-            //var studentsQueryable = _studentService.GetStudentsPagedQueryable();
-
             var filteredstudentsQueryable = _studentService
                 .FilterPagedStudentsQueryable(request.OrderBy, request.Search);
 
             var paginatedList = await filteredstudentsQueryable
                 .Select(expression)
                 .ToPaginatedListAsync(request.PageNumber, request.PageSize);
+
+            paginatedList.Meta = new
+            {
+                TotalCount = $"{paginatedList.Data.Count} students exist just in this page!"
+            };
 
             return paginatedList;
         }
