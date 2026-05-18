@@ -50,7 +50,7 @@ namespace SchoolManagementSystem.Core.Features.Students.Commands.Handlers
             if (currentStudent is null)
                 return NotFound<string>(_stringLocalizer[SharedResourcesKeys.NotFound]);
 
-            var student = _mapper.Map<Student>(request);
+            var student = _mapper.Map(request, currentStudent);
 
             var response = await _studentService.UpdateStudentAsync(student);
 
