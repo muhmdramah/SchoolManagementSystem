@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchoolManagementSystem.Data.Entities
 {
@@ -7,21 +8,20 @@ namespace SchoolManagementSystem.Data.Entities
         public Subject()
         {
             StudentsSubjects = new HashSet<StudentSubject>();
-            DepartmentSubjects = new HashSet<DepartmentSubject>();
+            DepartmetsSubjects = new HashSet<DepartmentSubject>();
+            InstructorSubjects = new HashSet<InstructorSubject>();
         }
-
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int SubjectId { get; set; }
-
-        [StringLength(64)]
-        [Required]
-        public string SubjectName { get; set; }
-
-        [Required]
-        public DateTime Period { get; set; }
-
+        public string? SubjectName { get; set; }
+        public DateTime? Period { get; set; }
+        [InverseProperty("Subject")]
         public virtual ICollection<StudentSubject> StudentsSubjects { get; set; }
-        public virtual ICollection<DepartmentSubject> DepartmentSubjects { get; set; }
+        [InverseProperty("Subject")]
+        public virtual ICollection<DepartmentSubject> DepartmetsSubjects { get; set; }
+        [InverseProperty("Subject")]
+        public virtual ICollection<InstructorSubject> InstructorSubjects { get; set; }
     }
 
 }

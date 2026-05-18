@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchoolManagementSystem.Data.Entities
 {
@@ -6,20 +7,28 @@ namespace SchoolManagementSystem.Data.Entities
     {
         public Department()
         {
-            // List makes duplicates possible, but we don't need any dubllications...
-            // using HashSet instead of List to prevent duplicates
             Students = new HashSet<Student>();
             DepartmentSubjects = new HashSet<DepartmentSubject>();
+            Instructors = new HashSet<Instructor>();
         }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int DepartmentId { get; set; }
+        public string? DepartmentName { get; set; }
 
-        [Required]
-        [StringLength(32)]
-        public string DepartmentName { get; set; }
+        public int? InstructorManager { get; set; }
 
+        [InverseProperty("Department")]
         public virtual ICollection<Student> Students { get; set; }
+        [InverseProperty("Department")]
         public virtual ICollection<DepartmentSubject> DepartmentSubjects { get; set; }
+        [InverseProperty("Department")]
+        public virtual ICollection<Instructor> Instructors { get; set; }
+
+        [ForeignKey("InstructorManager")]
+        [InverseProperty("DepartmentManager")]
+        public virtual Instructor? Instructor { get; set; }
+
     }
 }

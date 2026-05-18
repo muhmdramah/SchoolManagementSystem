@@ -1,22 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchoolManagementSystem.Data.Entities
 {
+    [PrimaryKey(nameof(StudentId), nameof(SubjectId))]  // Add this line
     public class StudentSubject
     {
-        [Key]
-        public int StudentSubjectId { get; set; }
-
+        // Remove the [Key] attributes from these properties
         public int StudentId { get; set; }
         public int SubjectId { get; set; }
-
+        public decimal? Grade { get; set; }
 
         [ForeignKey("StudentId")]
-        public virtual Student Student { get; set; }
+        [InverseProperty("StudentSubjects")]
+        public virtual Student? Student { get; set; }
 
         [ForeignKey("SubjectId")]
-        public virtual Subject Subject { get; set; }
-
+        [InverseProperty("StudentsSubjects")]
+        public virtual Subject? Subject { get; set; }
     }
 }

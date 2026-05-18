@@ -3,28 +3,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchoolManagementSystem.Data.Entities
 {
-
     public class Student
     {
+        public Student()
+        {
+            StudentSubjects = new HashSet<StudentSubject>();
+        }
+
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int StudentId { get; set; }
-
-        [Required]
-        [StringLength(128)]
-        public string StudentName { get; set; }
-
-        [StringLength(46)]
-        [Required]
-        public string StudentAddress { get; set; }
-
-        [StringLength(16)]
-        [Required]
-        [Phone]
-        public string StudentPhone { get; set; }
-
+        public string? StudentName { get; set; }
+        public string? StudentAddress { get; set; }
+        public string? StudentPhone { get; set; }
         public int? DepartmentId { get; set; }
 
         [ForeignKey("DepartmentId")]
-        public virtual Department Department { get; set; }
+        [InverseProperty("Students")]
+        public virtual Department? Department { get; set; }
+
+        [InverseProperty("Student")]  // This matches the property name in StudentSubject
+        public virtual ICollection<StudentSubject> StudentSubjects { get; set; }
     }
 }
